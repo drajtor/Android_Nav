@@ -1,24 +1,30 @@
 package com.example.darek.nav_10;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 
 /**
  * Created by Darek on 22.01.2017.
  */
 
-public class GPSTracker extends Service implements LocationListener{
+public class GPSTracker extends Service implements LocationListener {
 
     private final Context context;
 
+    Location location;
+
     boolean isGPSenabled = false;
+    boolean isNetworkEnabled = false;
     boolean canGetLocation = false;
 
     double latitude;
@@ -30,19 +36,56 @@ public class GPSTracker extends Service implements LocationListener{
     protected LocationManager locationManager;
 
 
-    public GPSTracker(Context context){
-        this.context=context;
+    public GPSTracker(Context context) {
+        this.context = context;
         getLocation();
     }
 
-    private Location getLocation()
-    {
-        try{
-            locationManager = (LocationManager)context.getSystemService(LOCATION_SERVICE);
+    public Location getLocation() {
+        try {
+            locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+            if (locationManager == null) {
+                return null;
+            }
+            isGPSenabled = locationManager.isProviderEnabled(locationManager.GPS_PROVIDER);
+            isNetworkEnabled = locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER);
+
+            if (!isGPSenabled && !isNetworkEnabled) {
+
+            } else {
+                this.canGetLocation = true;
+//                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                    // TODO: Consider calling
+//                    //    ActivityCompat#requestPermissions
+//                    // here to request the missing permissions, and then overriding
+//                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                    //                                          int[] grantResults)
+//                    // to handle the case where the user grants the permission. See the documentation
+//                    // for ActivityCompat#requestPermissions for more details.
+//                    return null;
+//                }
+                if (isNetworkEnabled) {
+                    locationManager.requestLocationUpdates(
+                            locationManager.NETWORK_PROVIDER,
+                            MIN_TIM_FOR_POS_UPDATE,
+                            MIN_DIST_FOR_POS_UPDATE,
+                            this);
+                    location = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
+                }
+                if (isGPSenabled){
+                    locationManager.requestLocationUpdates(
+                            locationManager.GPS_PROVIDER,
+                            MIN_TIM_FOR_POS_UPDATE,
+                            MIN_DIST_FOR_POS_UPDATE,
+                            this );
+                    location = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
+                }
+            }
         }
         catch (Exception e){
             e.printStackTrace();
         }
+    return location;
     }
 
     @Nullable
