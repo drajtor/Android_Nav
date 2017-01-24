@@ -1,6 +1,7 @@
 package com.example.darek.nav_10;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -26,9 +27,7 @@ public class GPSTracker extends Service implements LocationListener {
     boolean isGPSenabled = false;
     boolean isNetworkEnabled = false;
     boolean canGetLocation = false;
-
-    double latitude;
-    double longtitude;
+//    boolean accessGranted = false;
 
     static final int MIN_DIST_FOR_POS_UPDATE = 10;
     static final int MIN_TIM_FOR_POS_UPDATE = 1000 * 60;
@@ -40,6 +39,11 @@ public class GPSTracker extends Service implements LocationListener {
         this.context = context;
         getLocation();
     }
+
+//    public void GPSAccessGranted(){
+//        accessGranted = true;
+//
+//    }
 
     public Location getLocation() {
         try {
@@ -54,16 +58,7 @@ public class GPSTracker extends Service implements LocationListener {
 
             } else {
                 this.canGetLocation = true;
-//                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                    // TODO: Consider calling
-//                    //    ActivityCompat#requestPermissions
-//                    // here to request the missing permissions, and then overriding
-//                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//                    //                                          int[] grantResults)
-//                    // to handle the case where the user grants the permission. See the documentation
-//                    // for ActivityCompat#requestPermissions for more details.
-//                    return null;
-//                }
+
                 if (isNetworkEnabled) {
                     locationManager.requestLocationUpdates(
                             locationManager.NETWORK_PROVIDER,
