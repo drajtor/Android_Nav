@@ -1,12 +1,10 @@
 package com.example.darek.nav_10;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,21 +22,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        textViewCoordinates = (TextView) findViewById(R.id.TextViewGPSCoordinates);
+        gpsTracker = new GPSTracker(MainActivity.this){
+            @Override
+            public void onLocationChanged(Location location) {
+                textViewCoordinates.setText(Double.toString(location.getLongitude()) +
+                        "\n" +
+                        Double.toString(location.getLatitude()));
+            }
+        };
+        buttonShowCoordinates = (Button) findViewById(R.id.buttonGPSCoordinates);
+        buttonShowCoordinates.setOnClickListener(new View.OnClickListener() {
 
-        try {
-            textViewCoordinates = (TextView) findViewById(R.id.TextViewGPSCoordinates);
-            buttonShowCoordinates = (Button) findViewById(R.id.buttonGPSCoordinates);
-            buttonShowCoordinates.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-                @Override
-                public void onClick(View v) {
-                    gpsTracker = new GPSTracker(MainActivity.this);
-                    Location location = gpsTracker.getLocation();
-                    if (location != null) {
-                        textViewCoordinates.setText(Double.toString(location.getLongitude()) + " " + Double.toString(location.getLatitude()));
-                    }
+                Location location = gpsTracker.getLocation();
+                if (location != null) {
+                    textViewCoordinates.setText(Double.toString(location.getLongitude()) +
+                            "\n" +
+                            Double.toString(location.getLatitude()));
                 }
-            });
+            }
+        });
+        try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                         checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

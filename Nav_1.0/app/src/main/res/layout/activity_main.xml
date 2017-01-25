@@ -13,18 +13,56 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:id="@+id/TextViewGPSCoordinates" />
+        android:text="Current Location"
+        android:id="@+id/TextViewGPSCoordinates"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="17dp" />
 
     <Button
-        android:text="Button"
+        android:text="Update GPS Coordinates"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="43dp"
-        android:layout_marginStart="43dp"
-        android:layout_marginTop="98dp"
-        android:id="@+id/buttonGPSCoordinates" />
+        android:id="@+id/buttonGPSCoordinates"
+        android:layout_marginTop="31dp"
+        android:layout_below="@+id/TextViewGPSCoordinates"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:id="@+id/textViewKilometers"
+        tools:text="Km"
+        android:textSize="24sp"
+        android:layout_below="@+id/buttonGPSCoordinates"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:id="@+id/buttonStart"
+        android:background="@android:color/holo_green_light"
+        android:layout_alignLeft="@+id/buttonGPSCoordinates"
+        android:layout_alignStart="@+id/buttonGPSCoordinates"
+        android:layout_alignRight="@+id/buttonGPSCoordinates"
+        android:layout_alignEnd="@+id/buttonGPSCoordinates"
+        android:textColor="@android:color/background_light" />
+
+    <Button
+        android:text="Stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:id="@+id/buttonStop"
+        android:layout_below="@+id/buttonStart"
+        android:layout_alignLeft="@+id/buttonStart"
+        android:layout_alignStart="@+id/buttonStart"
+        android:layout_alignRight="@+id/buttonStart"
+        android:layout_alignEnd="@+id/buttonStart"
+        android:background="@android:color/holo_red_light"
+        android:textColor="@android:color/background_light" />
 </RelativeLayout>

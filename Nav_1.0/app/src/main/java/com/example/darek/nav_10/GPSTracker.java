@@ -27,10 +27,9 @@ public class GPSTracker extends Service implements LocationListener {
     boolean isGPSenabled = false;
     boolean isNetworkEnabled = false;
     boolean canGetLocation = false;
-//    boolean accessGranted = false;
 
     static final int MIN_DIST_FOR_POS_UPDATE = 10;
-    static final int MIN_TIM_FOR_POS_UPDATE = 1000 * 60;
+    static final int MIN_TIM_FOR_POS_UPDATE = 1000;
 
     protected LocationManager locationManager;
 
@@ -39,11 +38,6 @@ public class GPSTracker extends Service implements LocationListener {
         this.context = context;
         getLocation();
     }
-
-//    public void GPSAccessGranted(){
-//        accessGranted = true;
-//
-//    }
 
     public Location getLocation() {
         try {
