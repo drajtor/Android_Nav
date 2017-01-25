@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Current Location"
+        android:text="Current Location \n "
         android:id="@+id/TextViewGPSCoordinates"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -26,15 +26,16 @@
         android:id="@+id/buttonGPSCoordinates"
         android:layout_marginTop="31dp"
         android:layout_below="@+id/TextViewGPSCoordinates"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
 
     <TextView
-        android:text="TextView"
+        android:text="0km"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:id="@+id/textViewKilometers"
-        tools:text="Km"
+        tools:text="0km"
         android:textSize="24sp"
         android:layout_below="@+id/buttonGPSCoordinates"
         android:layout_centerHorizontal="true" />
@@ -65,4 +66,13 @@
         android:layout_alignEnd="@+id/buttonStart"
         android:background="@android:color/holo_red_light"
         android:textColor="@android:color/background_light" />
+
+    <TextView
+        android:text="GPS Accuracy\n"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/TextViewGPSAccuracy" />
 </RelativeLayout>
