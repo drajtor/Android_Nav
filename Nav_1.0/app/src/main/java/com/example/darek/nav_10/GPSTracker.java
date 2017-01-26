@@ -28,11 +28,16 @@ public class GPSTracker extends Service implements LocationListener {
     boolean isNetworkEnabled = false;
     boolean canGetLocation = false;
 
-    static final int MIN_DIST_FOR_POS_UPDATE = 100;
+    static final int MIN_DIST_FOR_POS_UPDATE = 25;
+
     static final int MIN_TIM_FOR_POS_UPDATE = 5000;
+    static final int MIN_TIM_FOR_POS_UPDATE_LOW_ACCURACY = 1000;
+
+    static final int TIM_AND_DIST__MIN = 0;
+
+    static final int DESIRED_ACCURACY = 20;
 
     protected LocationManager locationManager;
-
 
     public GPSTracker(Context context) {
         this.context = context;
@@ -53,10 +58,19 @@ public class GPSTracker extends Service implements LocationListener {
             } else {
                 this.canGetLocation = true;
 
+                long timeForPositionUpdate = 0;
+                float distanceForPositionUpdate = 0;
+//                if (location.getAccuracy() > DESIRED_ACCURACY){
+//                    timeForPositionUpdate = MIN_TIM_FOR_POS_UPDATE_LOW_ACCURACY;
+//                }else{
+//                    timeForPositionUpdate = MIN_TIM_FOR_POS_UPDATE;
+//                }
+                timeForPositionUpdate = MIN_TIM_FOR_POS_UPDATE_LOW_ACCURACY;
+
                 if (isNetworkEnabled) {
                     locationManager.requestLocationUpdates(
                             locationManager.NETWORK_PROVIDER,
-                            MIN_TIM_FOR_POS_UPDATE,
+                            timeForPositionUpdate,
                             MIN_DIST_FOR_POS_UPDATE,
                             this);
                     location = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
@@ -64,7 +78,7 @@ public class GPSTracker extends Service implements LocationListener {
                 if (isGPSenabled){
                     locationManager.requestLocationUpdates(
                             locationManager.GPS_PROVIDER,
-                            MIN_TIM_FOR_POS_UPDATE,
+                            timeForPositionUpdate,
                             MIN_DIST_FOR_POS_UPDATE,
                             this );
                     location = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
