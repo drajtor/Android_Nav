@@ -48,7 +48,8 @@ public class DistanceCounter {
                 CurrentLocation = location;
                 float deltaDistance = CurrentLocation.distanceTo(LastLocation);
                 if (deltaDistance > 50){
-                    Distance = Distance + (float)Math.round((deltaDistance/METERS_TO_KILOMETERS_RATIO)*METERS_DISPLAY_PRECISION)/METERS_DISPLAY_PRECISION;
+                    Distance = Distance + (deltaDistance/METERS_TO_KILOMETERS_RATIO);
+//                    Distance = (float)Math.round((deltaDistance/METERS_TO_KILOMETERS_RATIO)*METERS_DISPLAY_PRECISION)/METERS_DISPLAY_PRECISION;
                     LastLocation = CurrentLocation;
                 }
             }

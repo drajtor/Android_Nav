@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         Runnable runnable = new Runnable(){
             @Override
             public void run() {
-                textViewDistance.setText(Float.toString(distanceCounter.UpdateDistance())+"km");
+                textViewDistance.setText(String.format("%.2f",distanceCounter.UpdateDistance())+"km");
                 secHandler_5.postDelayed(this,5000);
             }
         };
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 distanceCounter.StartCountingDistance(gpsTracker.getLocation());
-                textViewDistance.setText(Float.toString(distanceCounter.getDistance())+"km");
+                textViewDistance.setText("0.00km");
             }
         });
         buttonStop = (Button) findViewById(R.id.buttonStop);
@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 distanceCounter.StopCountingDistance();
-                textViewDistance.setText("0km");
             }
         });
 
@@ -97,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                         && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                        ){
                     requestPermissions(new String[]{
                             Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_COARSE_LOCATION,
