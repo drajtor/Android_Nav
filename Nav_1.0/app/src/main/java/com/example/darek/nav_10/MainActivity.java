@@ -29,15 +29,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textViewGpsAccuracy;
 
     GPSTracker gpsTracker;
-    boolean trackingOn = false;
-    float distance = 0;
-    Location currentLocation;
-    Location lastLocation;
-
-    ArrayList<Location> LocationContainer;
-
-    static final int METERS_TO_KILOMETERS_RATIO = 1000;
-    static final int METERS_DISPLAY_PRECISION = 100;
+    DistanceCounter distanceCounter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,27 +39,14 @@ public class MainActivity extends AppCompatActivity {
         textViewCoordinates = (TextView) findViewById(R.id.TextViewGPSCoordinates);
         textViewDistance = (TextView) findViewById(R.id.textViewKilometers);
         textViewGpsAccuracy = (TextView) findViewById(R.id.TextViewGPSAccuracy);
-        LocationContainer = new ArrayList<Location>();
+
+        distanceCounter = new DistanceCounter();
 
         final Handler secHandler_5 = new Handler();
         Runnable runnable = new Runnable(){
             @Override
             public void run() {
-                if (LocationContainer != null && LocationContainer.size() > 0){
-                    Location location = getMostAccurateLocation();
-                    Log.i("Best Accuracy:",Float.toString(location.getAccuracy()));
-                    if (trackingOn && location.getAccuracy() <= 20 ){
-                        currentLocation = location;
-                        float deltaDistance = currentLocation.distanceTo(lastLocation);
-                        if (deltaDistance > 50){
-                            distance = distance + (float)Math.round((deltaDistance/METERS_TO_KILOMETERS_RATIO)*METERS_DISPLAY_PRECISION)/METERS_DISPLAY_PRECISION;
-                            lastLocation = currentLocation;
-                            textViewDistance.setText(Float.toString(distance)+"km");
-                        }
-                    }
-                }else{
-                    Log.i("No location available"," ");
-                }
+                textViewDistance.setText(Float.toString(distanceCounter.UpdateDistance())+"km");
                 secHandler_5.postDelayed(this,5000);
             }
         };
@@ -77,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onLocationChanged(Location location) {
                 if (location != null){
-                    LocationContainer.add(location);
+                    distanceCounter.UpdateLocation(location);
                     textViewCoordinates.setText(Double.toString(location.getLongitude()) +
                             "\n" +
                             Double.toString(location.getLatitude()));
@@ -101,18 +80,15 @@ public class MainActivity extends AppCompatActivity {
         buttonStart.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                distance = 0;
-                trackingOn = true;
-                currentLocation = gpsTracker.getLocation();
-                lastLocation = currentLocation;
-                textViewDistance.setText(Float.toString(distance)+"km");
+                distanceCounter.StartCountingDistance(gpsTracker.getLocation());
+                textViewDistance.setText(Float.toString(distanceCounter.getDistance())+"km");
             }
         });
         buttonStop = (Button) findViewById(R.id.buttonStop);
         buttonStop.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                trackingOn = false;
+                distanceCounter.StopCountingDistance();
                 textViewDistance.setText("0km");
             }
         });
@@ -144,18 +120,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-    }
-
-    public Location getMostAccurateLocation (){
-        Location max = LocationContainer.get(0);
-
-        for (int i = 1 ; i < LocationContainer.size() ; i++){
-            if (LocationContainer.get(i-1).getAccuracy() > LocationContainer.get(i).getAccuracy() ){
-                max = LocationContainer.get(i);
-            }
-        }
-        LocationContainer.clear();
-        return max;
     }
 }
 
