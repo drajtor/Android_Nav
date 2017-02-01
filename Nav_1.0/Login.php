@@ -1,5 +1,5 @@
 <?php
-    $con = mysqli_connect("raytek.000webhostapp.com", "id676679_raytek", "kaka123", "id676679_andnav");
+    $con = mysqli_connect("localhost", "id676679_raytek", "kaka123", "id676679_andnav");
     
     $userName = $_POST["userName"];
     $password = $_POST["password"];
