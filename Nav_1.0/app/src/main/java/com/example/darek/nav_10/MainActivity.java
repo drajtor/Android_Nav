@@ -1,12 +1,19 @@
 package com.example.darek.nav_10;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.icu.text.DecimalFormat;
 import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,76 +28,44 @@ import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button buttonShowCoordinates;
-    Button buttonStart;
-    Button buttonStop;
-    TextView textViewCoordinates;
-    TextView textViewDistance;
-    TextView textViewGpsAccuracy;
+    TabLayout tabLayout;
+    ViewPager viewPager;
 
-    GPSTracker gpsTracker;
-    DistanceCounter distanceCounter;
+//    Button buttonShowCoordinates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textViewCoordinates = (TextView) findViewById(R.id.TextViewGPSCoordinates);
-        textViewDistance = (TextView) findViewById(R.id.textViewKilometers);
-        textViewGpsAccuracy = (TextView) findViewById(R.id.TextViewGPSAccuracy);
-
-        distanceCounter = new DistanceCounter();
+        viewPager = (ViewPager) findViewById(R.id.ViewPager_MainActivity);
+        viewPager.setAdapter(new CustomAdapter(getSupportFragmentManager(),getApplicationContext()));
+        tabLayout = (TabLayout) findViewById(R.id.TabLayout_MainActivity);
 
         final Handler secHandler_5 = new Handler();
         Runnable runnable = new Runnable(){
             @Override
             public void run() {
-                textViewDistance.setText(String.format("%.2f",distanceCounter.UpdateDistance())+"km");
+//                textViewDistance.setText(String.format("%.2f",distanceCounter.UpdateDistance())+"km");
                 secHandler_5.postDelayed(this,5000);
             }
         };
         secHandler_5.post(runnable);
 
-        gpsTracker = new GPSTracker(MainActivity.this){
-            @Override
-            public void onLocationChanged(Location location) {
-                if (location != null){
-                    distanceCounter.UpdateLocation(location);
-                    textViewCoordinates.setText(Double.toString(location.getLongitude()) +
-                            "\n" +
-                            Double.toString(location.getLatitude()));
-                    textViewGpsAccuracy.setText("GPS Accuracy\n" + Float.toString(location.getAccuracy()));
-                }
-            }
-        };
-        buttonShowCoordinates = (Button) findViewById(R.id.buttonGPSCoordinates);
-        buttonShowCoordinates.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Location location = gpsTracker.getLocation();
-                if (location != null) {
-                    textViewCoordinates.setText(Double.toString(location.getLongitude()) +
-                            "\n" +
-                            Double.toString(location.getLatitude()));
-                }
-            }
-        });
-        buttonStart = (Button) findViewById(R.id.buttonStart);
-        buttonStart.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                distanceCounter.StartCountingDistance(gpsTracker.getLocation());
-                textViewDistance.setText("0.00km");
-            }
-        });
-        buttonStop = (Button) findViewById(R.id.buttonStop);
-        buttonStop.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                distanceCounter.StopCountingDistance();
-            }
-        });
+
+//        buttonShowCoordinates = (Button) findViewById(R.id.buttonGPSCoordinates);
+//        buttonShowCoordinates.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Location location = gpsTracker.getLocation();
+//                if (location != null) {
+//                    textViewCoordinates.setText(Double.toString(location.getLongitude()) +
+//                            "\n" +
+//                            Double.toString(location.getLatitude()));
+//                }
+//            }
+//        });
+
 
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -117,6 +92,37 @@ public class MainActivity extends AppCompatActivity {
                     //TODO close app
                 }
             }
+        }
+    }
+
+    private class CustomAdapter extends FragmentPagerAdapter {
+        private String fragments [] = {"Tracking", "TrackList"};
+
+        public CustomAdapter(FragmentManager supportFragmentManager, Context applicationContext) {
+            super(supportFragmentManager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position){
+                case 0:
+                    return new FragmentTracking(MainActivity.this);
+                case 1:
+                    return new FragmentTrackList();
+                default:
+                    return null;
+            }
+
+        }
+
+        @Override
+        public int getCount() {
+            return fragments.length;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return fragments[position];
         }
     }
 }

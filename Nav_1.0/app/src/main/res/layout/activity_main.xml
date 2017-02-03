@@ -10,69 +10,35 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.darek.nav_10.MainActivity">
 
-    <TextView
+
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/TabLayout_MainActivity"
+        android:layout_width="match_parent"
+        android:layout_height="24sp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tracking" />
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Track List" />
+
+    </android.support.design.widget.TabLayout>
+
+
+
+    <view
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Current Location \n "
-        android:id="@+id/TextViewGPSCoordinates"
+        class="android.support.v4.view.ViewPager"
+        android:id="@+id/ViewPager_MainActivity"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp" />
-
-    <Button
-        android:text="Update GPS Coordinates"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttonGPSCoordinates"
-        android:layout_marginTop="31dp"
-        android:layout_below="@+id/TextViewGPSCoordinates"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible" />
-
-    <TextView
-        android:text="0km"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:id="@+id/textViewKilometers"
-        tools:text="0km"
-        android:textSize="24sp"
-        android:layout_below="@+id/buttonGPSCoordinates"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:text="Start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:id="@+id/buttonStart"
-        android:background="@android:color/holo_green_light"
-        android:layout_alignLeft="@+id/buttonGPSCoordinates"
-        android:layout_alignStart="@+id/buttonGPSCoordinates"
-        android:layout_alignRight="@+id/buttonGPSCoordinates"
-        android:layout_alignEnd="@+id/buttonGPSCoordinates"
-        android:textColor="@android:color/background_light" />
-
-    <Button
-        android:text="Stop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:id="@+id/buttonStop"
-        android:layout_below="@+id/buttonStart"
-        android:layout_alignLeft="@+id/buttonStart"
-        android:layout_alignStart="@+id/buttonStart"
-        android:layout_alignRight="@+id/buttonStart"
-        android:layout_alignEnd="@+id/buttonStart"
-        android:background="@android:color/holo_red_light"
-        android:textColor="@android:color/background_light" />
-
-    <TextView
-        android:text="GPS Accuracy\n"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/TextViewGPSAccuracy" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
