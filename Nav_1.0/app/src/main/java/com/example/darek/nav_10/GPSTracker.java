@@ -28,7 +28,7 @@ public class GPSTracker extends Service implements LocationListener {
     boolean isNetworkEnabled = false;
     boolean canGetLocation = false;
 
-    static final int MIN_DIST_FOR_POS_UPDATE = 25;
+    static final int MIN_DIST_FOR_POS_UPDATE = 1;//25;
 
     static final int MIN_TIM_FOR_POS_UPDATE = 5000;
     static final int MIN_TIM_FOR_POS_UPDATE_LOW_ACCURACY = 1000;

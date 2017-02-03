@@ -12,11 +12,11 @@ import java.util.Map;
  */
 
 public class LoginRequest extends StringRequest {
-    private static final String LOGIN_REQUEST_URL = "https://raytek.000webhostapp.com/Login.php";
+
     private Map<String,String> params;
 
-    public LoginRequest (String userName, String password, Response.Listener<String> listener){
-        super (Method.POST,LOGIN_REQUEST_URL,listener,null);
+    public LoginRequest (String userName, String password, String url, Response.Listener<String> listener){
+        super (Method.POST,url,listener,null);
         params = new HashMap<>();
         params.put("userName",userName);
         params.put("password",password);
