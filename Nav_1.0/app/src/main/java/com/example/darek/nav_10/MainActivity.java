@@ -31,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager viewPager;
 
-//    Button buttonShowCoordinates;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,31 +39,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.ViewPager_MainActivity);
         viewPager.setAdapter(new CustomAdapter(getSupportFragmentManager(),getApplicationContext()));
         tabLayout = (TabLayout) findViewById(R.id.TabLayout_MainActivity);
-
-        final Handler secHandler_5 = new Handler();
-        Runnable runnable = new Runnable(){
-            @Override
-            public void run() {
-//                textViewDistance.setText(String.format("%.2f",distanceCounter.UpdateDistance())+"km");
-                secHandler_5.postDelayed(this,5000);
-            }
-        };
-        secHandler_5.post(runnable);
-
-
-//        buttonShowCoordinates = (Button) findViewById(R.id.buttonGPSCoordinates);
-//        buttonShowCoordinates.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Location location = gpsTracker.getLocation();
-//                if (location != null) {
-//                    textViewCoordinates.setText(Double.toString(location.getLongitude()) +
-//                            "\n" +
-//                            Double.toString(location.getLatitude()));
-//                }
-//            }
-//        });
-
 
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -112,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     return null;
             }
-
         }
 
         @Override

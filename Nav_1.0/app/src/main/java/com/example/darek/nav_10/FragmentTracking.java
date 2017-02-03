@@ -3,6 +3,7 @@ package com.example.darek.nav_10;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -35,7 +36,6 @@ public class FragmentTracking extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        return inflater.inflate(R.layout.fragment_tracking,container,false);
 
         View view = inflater.inflate(R.layout.fragment_tracking,container,false);
 
@@ -44,12 +44,22 @@ public class FragmentTracking extends Fragment {
         textViewCoordinates = (TextView) view.findViewById(R.id.TextViewGPSCoordinates);
         textViewGpsAccuracy = (TextView) view.findViewById(R.id.TextViewGPSAccuracy);
 
+        final Handler secHandler_5 = new Handler();
+        Runnable runnable = new Runnable(){
+            @Override
+            public void run() {
+                textViewDistance.setText(String.format("%.2f",distanceCounter.UpdateDistance())+"km");
+                secHandler_5.postDelayed(this,5000);
+            }
+        };
+        secHandler_5.post(runnable);
+        
         buttonStart = (Button) view.findViewById(R.id.buttonStart);
         buttonStart.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 distanceCounter.StartCountingDistance(gpsTracker.getLocation());
-                textViewDistance.setText("0.00km");
+                textViewDistance.setText("0,00km");
             }
         });
         buttonStop = (Button) view.findViewById(R.id.buttonStop);
@@ -71,7 +81,6 @@ public class FragmentTracking extends Fragment {
                 }
             }
         };
-
         return view;
     }
 }
