@@ -39,6 +39,23 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.ViewPager_MainActivity);
         viewPager.setAdapter(new CustomAdapter(getSupportFragmentManager(),getApplicationContext()));
         tabLayout = (TabLayout) findViewById(R.id.TabLayout_MainActivity);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+        });
 
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
