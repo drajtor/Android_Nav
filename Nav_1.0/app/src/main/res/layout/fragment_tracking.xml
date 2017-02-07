@@ -10,16 +10,6 @@
     tools:context="com.example.darek.nav_10.MainActivity">
 
     <Button
-        android:text="Update GPS Coordinates"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttonGPSCoordinates"
-        android:layout_marginTop="31dp"
-        android:layout_below="@+id/TextViewGPSCoordinates"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible" />
-
-    <Button
         android:text="Stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,12 +30,11 @@
         android:id="@+id/buttonStart"
         android:background="@android:color/holo_green_light"
         android:textColor="@android:color/background_light"
-        android:layout_above="@+id/buttonStop"
-        android:layout_alignLeft="@+id/buttonGPSCoordinates"
-        android:layout_alignStart="@+id/buttonGPSCoordinates"
-        android:layout_marginBottom="31dp"
-        android:layout_alignRight="@+id/buttonGPSCoordinates"
-        android:layout_alignEnd="@+id/buttonGPSCoordinates" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/buttonStop" />
 
     <TextView
         android:text="GPS Accuracy\n"

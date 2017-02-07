@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--android:background="@"-->
+
+
+    <ImageView
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        app:srcCompat="@android:drawable/ic_menu_myplaces"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/imageView_listItem"
+        android:background="@android:color/holo_blue_dark" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:id="@+id/textView_listItem"
+        android:layout_alignBottom="@+id/imageView_listItem"
+        android:layout_toLeftOf="@+id/button_listItem"
+        android:layout_toRightOf="@+id/imageView_listItem"
+        android:layout_toStartOf="@+id/button_listItem"
+        android:layout_toEndOf="@+id/imageView_listItem"
+        android:background="@android:color/holo_blue_dark"
+        android:textColor="@android:color/background_light" />
+
+    <Button
+        android:text="Track"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/button_listItem"
+        android:layout_alignBottom="@+id/textView_listItem"
+        android:background="@android:color/holo_blue_dark"
+        android:textColor="@android:color/background_light" />
+</RelativeLayout>
