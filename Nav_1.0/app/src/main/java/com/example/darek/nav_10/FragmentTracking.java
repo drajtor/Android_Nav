@@ -29,15 +29,20 @@ public class FragmentTracking extends Fragment {
 
     Context context;
 
+    private final int MARKED_ITEM_COLOR = 0xFF33B5E5;
+    private final int ITEMS_COLOR = 0xFF0099CC;
+
     public FragmentTracking(Context context_){
         context = context_;
     }
+
+    Button activeButton = null;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_tracking,container,false);
+        View view = inflater.inflate(R.layout.fragment_tracking, container, false);
 
         distanceCounter = new DistanceCounter();
         textViewDistance = (TextView) view.findViewById(R.id.textViewKilometers);
@@ -45,34 +50,38 @@ public class FragmentTracking extends Fragment {
         textViewGpsAccuracy = (TextView) view.findViewById(R.id.TextViewGPSAccuracy);
 
         final Handler secHandler_5 = new Handler();
-        Runnable runnable = new Runnable(){
+        Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                textViewDistance.setText(String.format("%.2f",distanceCounter.UpdateDistance())+"km");
-                secHandler_5.postDelayed(this,5000);
+                textViewDistance.setText(String.format("%.2f", distanceCounter.UpdateDistance()) + "km");
+                secHandler_5.postDelayed(this, 5000);
             }
         };
         secHandler_5.post(runnable);
-        
+
         buttonStart = (Button) view.findViewById(R.id.buttonStart);
-        buttonStart.setOnClickListener(new View.OnClickListener(){
+        buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 distanceCounter.StartCountingDistance(gpsTracker.getLocation());
-                textViewDistance.setText("0,00km");
+                textViewDistance.setText("0.00km");
+                ChangeButtonColorOnClick(buttonStart);
             }
         });
         buttonStop = (Button) view.findViewById(R.id.buttonStop);
-        buttonStop.setOnClickListener(new View.OnClickListener(){
+        buttonStop.setBackgroundColor(MARKED_ITEM_COLOR);
+        activeButton = buttonStop;
+        buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 distanceCounter.StopCountingDistance();
+                ChangeButtonColorOnClick(buttonStop);
             }
         });
-        gpsTracker = new GPSTracker(context){
+        gpsTracker = new GPSTracker(context) {
             @Override
             public void onLocationChanged(Location location) {
-                if (location != null){
+                if (location != null) {
                     distanceCounter.UpdateLocation(location);
                     textViewCoordinates.setText(Double.toString(location.getLongitude()) +
                             "\n" +
@@ -82,5 +91,12 @@ public class FragmentTracking extends Fragment {
             }
         };
         return view;
+    }
+    private void ChangeButtonColorOnClick(Button button){
+        if (activeButton != null){
+            activeButton.setBackgroundColor(ITEMS_COLOR);
+        }
+        button.setBackgroundColor(MARKED_ITEM_COLOR);
+        activeButton = button;
     }
 }

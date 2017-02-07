@@ -30,7 +30,7 @@ public class FragmentTrackList extends Fragment {
     private TrackListAdapter trackListAdapter;
     private ListElementViewHolder currentTrack = null;
 
-    private final int MARKED_ITEM_COLOR = 0xFF00DDFF;
+    private final int MARKED_ITEM_COLOR = 0xFF33B5E5;
     private final int ITEMS_COLOR = 0xFF0099CC;
 
     @Nullable
