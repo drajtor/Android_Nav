@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -46,6 +45,7 @@ public class FragmentTracking extends Fragment {
 
         distanceCounter = new DistanceCounter();
         textViewDistance = (TextView) view.findViewById(R.id.textViewKilometers);
+        textViewDistance.bringToFront();
         textViewCoordinates = (TextView) view.findViewById(R.id.TextViewGPSCoordinates);
         textViewGpsAccuracy = (TextView) view.findViewById(R.id.TextViewGPSAccuracy);
 
@@ -59,7 +59,7 @@ public class FragmentTracking extends Fragment {
         };
         secHandler_5.post(runnable);
 
-        buttonStart = (Button) view.findViewById(R.id.buttonStart);
+        buttonStart = (Button) view.findViewById(R.id.buttonPause);
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
