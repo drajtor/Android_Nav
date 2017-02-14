@@ -42,29 +42,6 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:text="0km"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewKilometersPayed"
-        tools:text="0km"
-        android:textSize="40sp"
-        android:layout_below="@+id/TextViewGPSAccuracy"
-        android:layout_toStartOf="@+id/TextViewGPSCoordinates" />
-
-    <TextView
-        android:text="0km"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewKilometers"
-        tools:text="0km"
-        android:textSize="40sp"
-        android:layout_marginLeft="14dp"
-        android:layout_marginStart="14dp"
-        android:layout_below="@+id/TextViewGPSAccuracy"
-        android:layout_toRightOf="@+id/TextViewGPSCoordinates"
-        android:layout_toEndOf="@+id/TextViewGPSCoordinates" />
-
     <Button
         android:text="Pause"
         android:layout_width="wrap_content"
@@ -104,25 +81,58 @@
         android:layout_above="@id/buttonStart"
         android:layout_marginTop="45dp">
         <Button
-            android:text="Billabe Track"
+            android:text="Billabe"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:id="@+id/buttonSwichToPayed"
+            android:id="@+id/buttonBillable"
             android:background="@android:color/holo_blue_dark"
-            android:textColor="@android:color/background_light"
+            android:gravity="bottom|center"
+            android:paddingBottom="20dp"
             android:textSize="18sp"
             android:layout_weight="1" />
 
         <Button
-            android:text="Non Billable Track"
+            android:text="Non Billable"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:id="@+id/buttonSwitchToFree"
+            android:id="@+id/buttonNonBillable"
             android:background="@android:color/holo_blue_dark"
             android:textColor="@android:color/background_light"
+            android:paddingBottom="20dp"
             android:textSize="18sp"
+            android:gravity="bottom|center"
             android:layout_weight="1"
             android:textAlignment="gravity" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="75dp">
+
+        <TextView
+            android:text="0\nkm"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/textViewKilometersPayed"
+            tools:text="0km"
+            android:textSize="40sp"
+            android:layout_weight="1"
+            android:textAlignment="center" />
+
+        <TextView
+            android:text="0%nkm"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/textViewKilometers"
+            tools:text="0km"
+            android:textSize="40sp"
+            android:layout_weight="1"
+            android:textAlignment="center" />
     </LinearLayout>
 
 </RelativeLayout>

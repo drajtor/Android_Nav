@@ -96,9 +96,12 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    return new FragmentTrackList();
-                case 1:
+//                    return new FragmentTrackList();
                     return new FragmentTracking(MainActivity.this);
+                case 1:
+                    return new FragmentTrackList();
+//                    return new FragmentTracking(MainActivity.this);
+
                 default:
                     return null;
             }

@@ -18,7 +18,12 @@ import android.widget.TextView;
 public class FragmentTracking extends Fragment {
 
     Button buttonStart;
+    Button buttonPause;
     Button buttonStop;
+
+    Button buttonBillable;
+    Button buttonNonBillable;
+
     TextView textViewCoordinates;
     TextView textViewGpsAccuracy;
 
@@ -35,7 +40,8 @@ public class FragmentTracking extends Fragment {
         context = context_;
     }
 
-    Button activeButton = null;
+    Button activeStartStopButton = null;
+    Button activeTrackButton = null;
 
     @Nullable
     @Override
@@ -53,31 +59,59 @@ public class FragmentTracking extends Fragment {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                textViewDistance.setText(String.format("%.2f", distanceCounter.UpdateDistance()) + "km");
+                textViewDistance.setText(String.format("%.2f", distanceCounter.UpdateDistance()) + "\nkm");
                 secHandler_5.postDelayed(this, 5000);
             }
         };
         secHandler_5.post(runnable);
 
-        buttonStart = (Button) view.findViewById(R.id.buttonPause);
+        buttonStart = (Button) view.findViewById(R.id.buttonStart);
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 distanceCounter.StartCountingDistance(gpsTracker.getLocation());
-                textViewDistance.setText("0.00km");
-                ChangeButtonColorOnClick(buttonStart);
+                textViewDistance.setText("0.00\nkm");
+                ChangeStartStopPauseButtonColorOnClick(buttonStart);
             }
         });
         buttonStop = (Button) view.findViewById(R.id.buttonStop);
         buttonStop.setBackgroundColor(MARKED_ITEM_COLOR);
-        activeButton = buttonStop;
+
         buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 distanceCounter.StopCountingDistance();
-                ChangeButtonColorOnClick(buttonStop);
+                ChangeStartStopPauseButtonColorOnClick(buttonStop);
             }
         });
+
+        buttonPause = (Button) view.findViewById(R.id.buttonPause);
+        buttonPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                distanceCounter.StopCountingDistance();
+                ChangeStartStopPauseButtonColorOnClick(buttonPause);
+            }
+        });
+
+        buttonBillable = (Button) view.findViewById(R.id.buttonBillable);
+        buttonBillable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChangeTrackButtonColorOnClick(buttonBillable);
+            }
+        });
+        buttonNonBillable = (Button) view.findViewById(R.id.buttonNonBillable);
+        buttonNonBillable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChangeTrackButtonColorOnClick(buttonNonBillable);
+            }
+        });
+
+        activeStartStopButton = buttonStop;
+        activeTrackButton = buttonNonBillable;
+
         gpsTracker = new GPSTracker(context) {
             @Override
             public void onLocationChanged(Location location) {
@@ -92,11 +126,18 @@ public class FragmentTracking extends Fragment {
         };
         return view;
     }
-    private void ChangeButtonColorOnClick(Button button){
-        if (activeButton != null){
-            activeButton.setBackgroundColor(ITEMS_COLOR);
+    private void ChangeStartStopPauseButtonColorOnClick(Button button){
+        if (activeStartStopButton != null){
+            activeStartStopButton.setBackgroundColor(ITEMS_COLOR);
         }
         button.setBackgroundColor(MARKED_ITEM_COLOR);
-        activeButton = button;
+        activeStartStopButton = button;
+    }
+    private void ChangeTrackButtonColorOnClick(Button button){
+        if (activeTrackButton != null){
+            activeTrackButton.setBackgroundColor(ITEMS_COLOR);
+        }
+        button.setBackgroundColor(MARKED_ITEM_COLOR);
+        activeTrackButton = button;
     }
 }
