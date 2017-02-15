@@ -11,15 +11,15 @@ import java.util.ArrayList;
 
 public class DistanceCounter {
 
-    float Distance = 0;
-    Location LastLocation;
-    Location CurrentLocation;
-    boolean trackingOn = false;
+    private float Distance = 0;
+    private Location LastLocation;
+    private Location CurrentLocation;
+    private boolean trackingOn = false;
 
-    ArrayList<Location> LocationContainer;
+    private ArrayList<Location> LocationContainer;
 
-    static final int METERS_TO_KILOMETERS_RATIO = 1000;
-    static final int METERS_DISPLAY_PRECISION = 100;
+    private static final int METERS_TO_KILOMETERS_RATIO = 1000;
+    private static final int METERS_DISPLAY_PRECISION = 100;
 
     public DistanceCounter(){
         LocationContainer = new ArrayList<Location>();
@@ -30,7 +30,6 @@ public class DistanceCounter {
     }
 
     public void StartCountingDistance(Location startLocation){
-        Distance = 0;
         trackingOn = true;
         CurrentLocation = startLocation;
         LastLocation = CurrentLocation;
@@ -38,6 +37,10 @@ public class DistanceCounter {
 
     public void StopCountingDistance(){
         trackingOn = false;
+    }
+
+    public void ResetCounter (){
+        Distance = 0;
     }
 
     public float UpdateDistance(){
@@ -49,7 +52,6 @@ public class DistanceCounter {
                 float deltaDistance = CurrentLocation.distanceTo(LastLocation);
                 if (deltaDistance > 50){
                     Distance = Distance + (deltaDistance/METERS_TO_KILOMETERS_RATIO);
-//                    Distance = (float)Math.round((deltaDistance/METERS_TO_KILOMETERS_RATIO)*METERS_DISPLAY_PRECISION)/METERS_DISPLAY_PRECISION;
                     LastLocation = CurrentLocation;
                 }
             }

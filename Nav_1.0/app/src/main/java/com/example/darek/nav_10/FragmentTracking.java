@@ -12,26 +12,45 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import static com.example.darek.nav_10.FragmentTracking.State.PAUSE;
+import static com.example.darek.nav_10.FragmentTracking.State.START;
+import static com.example.darek.nav_10.FragmentTracking.State.STOP;
+import static com.example.darek.nav_10.FragmentTracking.Track.TRACK_BILLABLE;
+import static com.example.darek.nav_10.FragmentTracking.Track.TRACK_NON_BILLABLE;
+
 /**
  * Created by 212449139 on 2/3/2017.
  */
 public class FragmentTracking extends Fragment {
 
+    enum State {START, PAUSE, STOP,}
+    enum Track {TRACK_BILLABLE, TRACK_NON_BILLABLE}
+    private class StateC{
+        State state;
+    }
+
+    Context context;
+
     Button buttonStart;
     Button buttonPause;
     Button buttonStop;
-
     Button buttonBillable;
     Button buttonNonBillable;
 
     TextView textViewCoordinates;
     TextView textViewGpsAccuracy;
 
-    DistanceCounter distanceCounter;
-    TextView textViewDistance;
-    GPSTracker gpsTracker;
+    TextView textViewDistanceBillable;
+    TextView textViewDistanceNonBillable;
 
-    Context context;
+    StateC BillableTrackState;
+    StateC NonBillableTrackState;
+    Track CurrentTrack = TRACK_NON_BILLABLE;
+
+    DistanceCounter distanceCounterBillable;
+    DistanceCounter distanceCounterNonBillable;
+
+    GPSTracker gpsTracker;
 
     private final int MARKED_ITEM_COLOR = 0xFF33B5E5;
     private final int ITEMS_COLOR = 0xFF0099CC;
@@ -49,17 +68,24 @@ public class FragmentTracking extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_tracking, container, false);
 
-        distanceCounter = new DistanceCounter();
-        textViewDistance = (TextView) view.findViewById(R.id.textViewKilometers);
-        textViewDistance.bringToFront();
+        distanceCounterBillable = new DistanceCounter();
+        distanceCounterNonBillable = new DistanceCounter();
+        textViewDistanceBillable = (TextView) view.findViewById(R.id.textViewKilometersBillable);
+        textViewDistanceNonBillable = (TextView) view.findViewById(R.id.textViewKilometersNonBillable);
         textViewCoordinates = (TextView) view.findViewById(R.id.TextViewGPSCoordinates);
         textViewGpsAccuracy = (TextView) view.findViewById(R.id.TextViewGPSAccuracy);
+
+        BillableTrackState = new StateC();
+        NonBillableTrackState = new StateC();
+        BillableTrackState.state = PAUSE;
+        NonBillableTrackState.state = PAUSE;
 
         final Handler secHandler_5 = new Handler();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                textViewDistance.setText(String.format("%.2f", distanceCounter.UpdateDistance()) + "\nkm");
+                textViewDistanceBillable.setText(String.format("%.2f", distanceCounterBillable.UpdateDistance()) + "\nkm");
+                textViewDistanceNonBillable.setText(String.format("%.2f",distanceCounterNonBillable.UpdateDistance()) + "\nkm");
                 secHandler_5.postDelayed(this, 5000);
             }
         };
@@ -69,19 +95,25 @@ public class FragmentTracking extends Fragment {
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                distanceCounter.StartCountingDistance(gpsTracker.getLocation());
-                textViewDistance.setText("0.00\nkm");
-                ChangeStartStopPauseButtonColorOnClick(buttonStart);
+                if (CurrentTrack == TRACK_BILLABLE) {
+                    BillableTrackState.state = START;
+                }else{
+                    NonBillableTrackState.state = START;
+                }
+                TracksStateHandler();
             }
         });
         buttonStop = (Button) view.findViewById(R.id.buttonStop);
-        buttonStop.setBackgroundColor(MARKED_ITEM_COLOR);
 
         buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                distanceCounter.StopCountingDistance();
-                ChangeStartStopPauseButtonColorOnClick(buttonStop);
+                if (CurrentTrack == TRACK_BILLABLE) {
+                    BillableTrackState.state = STOP;
+                }else{
+                    NonBillableTrackState.state = STOP;
+                }
+                TracksStateHandler();
             }
         });
 
@@ -89,8 +121,12 @@ public class FragmentTracking extends Fragment {
         buttonPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                distanceCounter.StopCountingDistance();
-                ChangeStartStopPauseButtonColorOnClick(buttonPause);
+                if (CurrentTrack == TRACK_BILLABLE) {
+                    BillableTrackState.state = PAUSE;
+                }else{
+                    NonBillableTrackState.state = PAUSE;
+                }
+                TracksStateHandler();
             }
         });
 
@@ -98,25 +134,29 @@ public class FragmentTracking extends Fragment {
         buttonBillable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChangeTrackButtonColorOnClick(buttonBillable);
+                CurrentTrack = TRACK_BILLABLE;
+                TracksStateHandler();
             }
         });
         buttonNonBillable = (Button) view.findViewById(R.id.buttonNonBillable);
         buttonNonBillable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChangeTrackButtonColorOnClick(buttonNonBillable);
+                CurrentTrack = TRACK_NON_BILLABLE;
+                TracksStateHandler();
             }
         });
-
-        activeStartStopButton = buttonStop;
-        activeTrackButton = buttonNonBillable;
 
         gpsTracker = new GPSTracker(context) {
             @Override
             public void onLocationChanged(Location location) {
                 if (location != null) {
-                    distanceCounter.UpdateLocation(location);
+                    if (BillableTrackState.state == START){
+                        distanceCounterBillable.UpdateLocation(location);
+                    }
+                    else if (NonBillableTrackState.state == START){
+                        distanceCounterNonBillable.UpdateLocation(location);
+                    }
                     textViewCoordinates.setText(Double.toString(location.getLongitude()) +
                             "\n" +
                             Double.toString(location.getLatitude()));
@@ -124,6 +164,9 @@ public class FragmentTracking extends Fragment {
                 }
             }
         };
+
+        TracksStateHandler();
+
         return view;
     }
     private void ChangeStartStopPauseButtonColorOnClick(Button button){
@@ -139,5 +182,39 @@ public class FragmentTracking extends Fragment {
         }
         button.setBackgroundColor(MARKED_ITEM_COLOR);
         activeTrackButton = button;
+    }
+
+    private void TracksStateHandler (){
+        switch (CurrentTrack){
+            case TRACK_BILLABLE:
+                StateHandler(BillableTrackState,NonBillableTrackState,distanceCounterBillable,distanceCounterNonBillable);
+                ChangeTrackButtonColorOnClick(buttonBillable);
+                break;
+            case TRACK_NON_BILLABLE:
+            default:
+                StateHandler(NonBillableTrackState,BillableTrackState,distanceCounterNonBillable,distanceCounterBillable);
+                ChangeTrackButtonColorOnClick(buttonNonBillable);
+                break;
+        }
+    }
+
+    private void StateHandler (StateC state, StateC previousState,
+                               DistanceCounter activeCounter, DistanceCounter pausedCounter ){
+        switch (state.state){
+            case START:
+                activeCounter.StartCountingDistance(gpsTracker.getLocation());
+                pausedCounter.StopCountingDistance();
+                previousState.state = PAUSE;
+                ChangeStartStopPauseButtonColorOnClick(buttonStart);
+                break;
+            case STOP:
+                activeCounter.ResetCounter();
+                ChangeStartStopPauseButtonColorOnClick(buttonStop);
+                break;
+            case PAUSE:
+                activeCounter.StopCountingDistance();
+                ChangeStartStopPauseButtonColorOnClick(buttonPause);
+                break;
+        }
     }
 }
