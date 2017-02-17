@@ -159,9 +159,11 @@ public class FragmentTracking extends Fragment {
             public void onClick(View v) {
                 String Destination = textViewDestination.getText().toString();
                 Track currentTrack = trackManager.getActiveTrack();
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse("google.navigation:q=" + currentTrack.Number + currentTrack.Street + currentTrack.City));
-                startActivity(intent);
+                if (currentTrack != null){
+                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                            Uri.parse("google.navigation:q=" + currentTrack.Number + " " + currentTrack.Street + " " + currentTrack.City));
+                    startActivity(intent);
+                }
             }
         });
 
