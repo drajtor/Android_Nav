@@ -23,13 +23,30 @@ import java.util.List;
  */
 public class FragmentTrackList extends Fragment {
 
+    Context context;
+
     private ListView listView;
     private TrackListAdapter trackListAdapter;
     private ListElementViewHolder currentTrack = null;
-    private TrackManager trackManager = new TrackManager();
+    private TrackManager trackManager;
 
     private final int MARKED_ITEM_COLOR = 0xFF33B5E5;
     private final int ITEMS_COLOR = 0xFF0099CC;
+
+    onTrackSelectedListener mCallback;
+
+    public FragmentTrackList (Context context){
+        this.context = context;
+        if (this.context instanceof MainActivity)
+            trackManager = ((MainActivity)this.context).getTrackManager();
+        else{
+            /* TODO add to error log */
+            System.exit(0);
+        }
+    }
+    public interface onTrackSelectedListener {
+        public void onTrackSelected();
+    }
 
     @Nullable
     @Override
@@ -47,6 +64,13 @@ public class FragmentTrackList extends Fragment {
                 Toast.makeText(listView.getContext(),message,Toast.LENGTH_LONG).show();
             }
         });
+
+        try {
+            mCallback = ((onTrackSelectedListener)context);
+        }catch (ClassCastException e){
+            throw new ClassCastException ("context to onTrackSelectedListener interface cast failed");
+        }
+
         return view;
     }
 
@@ -105,6 +129,8 @@ public class FragmentTrackList extends Fragment {
         }
         currentTrack = listElementViewHolder;
         setListElementColor(currentTrack,MARKED_ITEM_COLOR);
+
+        mCallback.onTrackSelected();
     }
 
     private void setListElementColor (ListElementViewHolder listElementViewHolder  ,int color){

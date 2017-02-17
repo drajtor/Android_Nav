@@ -21,7 +21,7 @@ public class TrackManager extends ArrayList<Track>{
         ActiveTrack = track;
     }
 
-    public Track GetActiveTrack (){
+    public Track getActiveTrack (){
         return ActiveTrack;
     }
 }

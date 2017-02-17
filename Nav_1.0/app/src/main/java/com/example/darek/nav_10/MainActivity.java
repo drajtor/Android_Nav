@@ -26,10 +26,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Timer;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentTrackList.onTrackSelectedListener {
 
     TabLayout tabLayout;
     ViewPager viewPager;
+
+    FragmentTracking fragmentTracking;
+    FragmentTrackList fragmentTrackList;
+
+    private TrackManager trackManager = new TrackManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +90,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onTrackSelected() {
+        fragmentTracking.onTrackChosen();
+    }
+
     private class CustomAdapter extends FragmentPagerAdapter {
         private String fragments [] = {"Tracking", "TrackList"};
 
@@ -96,11 +106,11 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-//                    return new FragmentTrackList();
-                    return new FragmentTracking(MainActivity.this);
+                    fragmentTrackList = new FragmentTrackList(MainActivity.this);
+                    return fragmentTrackList;
                 case 1:
-                    return new FragmentTrackList();
-//                    return new FragmentTracking(MainActivity.this);
+                    fragmentTracking = new FragmentTracking(MainActivity.this);
+                    return fragmentTracking;
 
                 default:
                     return null;
@@ -116,6 +126,9 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return fragments[position];
         }
+    }
+    public TrackManager getTrackManager(){
+        return trackManager;
     }
 }
 

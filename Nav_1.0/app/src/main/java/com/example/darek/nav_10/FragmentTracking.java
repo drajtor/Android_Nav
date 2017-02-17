@@ -15,8 +15,8 @@ import android.widget.TextView;
 import static com.example.darek.nav_10.FragmentTracking.State.PAUSE;
 import static com.example.darek.nav_10.FragmentTracking.State.START;
 import static com.example.darek.nav_10.FragmentTracking.State.STOP;
-import static com.example.darek.nav_10.FragmentTracking.Track.TRACK_BILLABLE;
-import static com.example.darek.nav_10.FragmentTracking.Track.TRACK_NON_BILLABLE;
+import static com.example.darek.nav_10.FragmentTracking.TrackType.TRACK_BILLABLE;
+import static com.example.darek.nav_10.FragmentTracking.TrackType.TRACK_NON_BILLABLE;
 
 /**
  * Created by 212449139 on 2/3/2017.
@@ -24,7 +24,7 @@ import static com.example.darek.nav_10.FragmentTracking.Track.TRACK_NON_BILLABLE
 public class FragmentTracking extends Fragment {
 
     enum State {START, PAUSE, STOP,}
-    enum Track {TRACK_BILLABLE, TRACK_NON_BILLABLE}
+    enum TrackType {TRACK_BILLABLE, TRACK_NON_BILLABLE}
     private class StateC{
         State state;
     }
@@ -39,13 +39,16 @@ public class FragmentTracking extends Fragment {
 
     TextView textViewCoordinates;
     TextView textViewGpsAccuracy;
+    TextView textViewDestination;
 
     TextView textViewDistanceBillable;
     TextView textViewDistanceNonBillable;
 
+    TrackManager trackManager;
+
     StateC BillableTrackState;
     StateC NonBillableTrackState;
-    Track CurrentTrack = TRACK_NON_BILLABLE;
+    TrackType currentTrackType = TRACK_NON_BILLABLE;
 
     DistanceCounter distanceCounterBillable;
     DistanceCounter distanceCounterNonBillable;
@@ -57,6 +60,7 @@ public class FragmentTracking extends Fragment {
 
     public FragmentTracking(Context context_){
         context = context_;
+        trackManager = ((MainActivity)context).getTrackManager();
     }
 
     Button activeStartStopButton = null;
@@ -74,6 +78,7 @@ public class FragmentTracking extends Fragment {
         textViewDistanceNonBillable = (TextView) view.findViewById(R.id.textViewKilometersNonBillable);
         textViewCoordinates = (TextView) view.findViewById(R.id.TextViewGPSCoordinates);
         textViewGpsAccuracy = (TextView) view.findViewById(R.id.TextViewGPSAccuracy);
+        textViewDestination = (TextView) view.findViewById(R.id.textViewDestination);
 
         BillableTrackState = new StateC();
         NonBillableTrackState = new StateC();
@@ -95,7 +100,7 @@ public class FragmentTracking extends Fragment {
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (CurrentTrack == TRACK_BILLABLE) {
+                if (currentTrackType == TRACK_BILLABLE) {
                     BillableTrackState.state = START;
                 }else{
                     NonBillableTrackState.state = START;
@@ -108,7 +113,7 @@ public class FragmentTracking extends Fragment {
         buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (CurrentTrack == TRACK_BILLABLE) {
+                if (currentTrackType == TRACK_BILLABLE) {
                     BillableTrackState.state = STOP;
                 }else{
                     NonBillableTrackState.state = STOP;
@@ -121,7 +126,7 @@ public class FragmentTracking extends Fragment {
         buttonPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (CurrentTrack == TRACK_BILLABLE) {
+                if (currentTrackType == TRACK_BILLABLE) {
                     BillableTrackState.state = PAUSE;
                 }else{
                     NonBillableTrackState.state = PAUSE;
@@ -134,7 +139,7 @@ public class FragmentTracking extends Fragment {
         buttonBillable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CurrentTrack = TRACK_BILLABLE;
+                currentTrackType = TRACK_BILLABLE;
                 TracksStateHandler();
             }
         });
@@ -142,7 +147,7 @@ public class FragmentTracking extends Fragment {
         buttonNonBillable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CurrentTrack = TRACK_NON_BILLABLE;
+                currentTrackType = TRACK_NON_BILLABLE;
                 TracksStateHandler();
             }
         });
@@ -185,7 +190,7 @@ public class FragmentTracking extends Fragment {
     }
 
     private void TracksStateHandler (){
-        switch (CurrentTrack){
+        switch (currentTrackType){
             case TRACK_BILLABLE:
                 StateHandler(BillableTrackState,NonBillableTrackState,distanceCounterBillable,distanceCounterNonBillable);
                 ChangeTrackButtonColorOnClick(buttonBillable);
@@ -216,5 +221,11 @@ public class FragmentTracking extends Fragment {
                 ChangeStartStopPauseButtonColorOnClick(buttonPause);
                 break;
         }
+    }
+
+    public void onTrackChosen() {
+        Track track = trackManager.getActiveTrack();
+        if (track != null)
+            textViewDestination.setText(track.TrackString);
     }
 }
