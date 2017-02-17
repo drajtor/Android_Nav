@@ -37,11 +37,10 @@ public class FragmentTrackList extends Fragment {
 
     public FragmentTrackList (Context context){
         this.context = context;
-        if (this.context instanceof MainActivity)
-            trackManager = ((MainActivity)this.context).getTrackManager();
-        else{
-            /* TODO add to error log */
-            System.exit(0);
+        try {
+            trackManager = ((MainActivity) this.context).getTrackManager();
+        }catch(ClassCastException e){
+            throw new ClassCastException("Tracking List Fragment cannot cast context to Main Activity");
         }
     }
     public interface onTrackSelectedListener {

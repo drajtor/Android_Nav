@@ -1,7 +1,9 @@
 package com.example.darek.nav_10;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -152,6 +154,17 @@ public class FragmentTracking extends Fragment {
             }
         });
 
+        textViewDestination.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String Destination = textViewDestination.getText().toString();
+                Track currentTrack = trackManager.getActiveTrack();
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("google.navigation:q=" + currentTrack.Number + currentTrack.Street + currentTrack.City));
+                startActivity(intent);
+            }
+        });
+
         gpsTracker = new GPSTracker(context) {
             @Override
             public void onLocationChanged(Location location) {
@@ -169,7 +182,6 @@ public class FragmentTracking extends Fragment {
                 }
             }
         };
-
         TracksStateHandler();
 
         return view;
