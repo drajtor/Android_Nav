@@ -91,8 +91,20 @@ public class FragmentTracking extends Fragment {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                textViewDistanceBillable.setText(String.format("%.2f", distanceCounterBillable.UpdateDistance()) + "\nkm");
-                textViewDistanceNonBillable.setText(String.format("%.2f",distanceCounterNonBillable.UpdateDistance()) + "\nkm");
+                Track track;
+                track = (Track)jobManager.getActiveJob();
+                if (track != null){
+                    float distance;
+                    if (currentTrackType == TRACK_BILLABLE) {
+                        distance = distanceCounterBillable.UpdateDistance();
+                        textViewDistanceBillable.setText(String.format("%.2f", distance) + "\nkm");
+                        track.setDistanceBillable(distance, Track.Billability.BILLABLE);
+                    }else{
+                        distance = distanceCounterNonBillable.UpdateDistance();
+                        textViewDistanceNonBillable.setText(String.format("%.2f",distance) + "\nkm");
+                        track.setDistanceBillable(distance, Track.Billability.NON_BILLABLE);
+                    }
+                }
                 secHandler_5.postDelayed(this, 5000);
             }
         };
@@ -121,6 +133,8 @@ public class FragmentTracking extends Fragment {
                     NonBillableTrackState.state = STOP;
                 }
                 TracksStateHandler();
+                Intent intent = new Intent(context,TrackSummaryActivity.class);
+                context.startActivity(intent);
             }
         });
 
@@ -158,7 +172,13 @@ public class FragmentTracking extends Fragment {
             @Override
             public void onClick(View v) {
                 String Destination = textViewDestination.getText().toString();
-                Track currentTrack = (Track)jobManager.getActiveJob();
+                Track currentTrack;
+                try{
+                    currentTrack = (Track)jobManager.getActiveJob();
+                }
+                catch(ClassCastException e){
+                    throw new ClassCastException("Fragment Tracking error while casting Job to Track");
+                }
                 if (currentTrack != null){
                     Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                             Uri.parse("google.navigation:q=" + currentTrack.Number + " " + currentTrack.Street + " " + currentTrack.City));
@@ -238,8 +258,8 @@ public class FragmentTracking extends Fragment {
     }
 
     public void onTrackChosen() {
-        Track track = (Track)jobManager.getActiveJob();
-        if (track != null)
-            textViewDestination.setText(track.TrackString);
+        Job job= jobManager.getActiveJob();
+        if (job != null)
+            textViewDestination.setText(job.getJobName());
     }
 }

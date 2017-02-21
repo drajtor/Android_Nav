@@ -125,7 +125,7 @@
             android:textAlignment="center" />
 
         <TextView
-            android:text="0%nkm"
+            android:text="0\nkm"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/textViewKilometersNonBillable"

@@ -6,12 +6,19 @@ package com.example.darek.nav_10;
 
 public class Track implements Job{
 
+    public enum Billability {BILLABLE, NON_BILLABLE};
+
     String Alias;
     String City;
     String Postal;
     String Street;
     String Number;
     String TrackString;
+
+    private float DistanceBillable;
+    private float DistanceNonBillable;
+    private int TimeBillable;
+    private int TimeNonBillable;
 
     public Track (){
 
@@ -25,6 +32,22 @@ public class Track implements Job{
         Street = street;
         Number = number;
         TrackString = city + ", " + street + " "+ number;
+    }
+
+    public void setDistanceBillable(float distance, Billability billability){
+        if (billability == Billability.BILLABLE){
+            DistanceBillable = distance;
+        }else {
+            DistanceNonBillable = distance;
+        }
+    }
+
+    public void setTimeBillable(int time, Billability billability){
+        if (billability == Billability.BILLABLE){
+            TimeBillable = time;
+        }else {
+            TimeNonBillable = time;
+        }
     }
 
     @Override

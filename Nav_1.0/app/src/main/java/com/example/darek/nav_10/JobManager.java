@@ -12,9 +12,7 @@ public class JobManager extends ArrayList<Job>{
 
     public JobManager(){
         super();
-        add(new Track("Katowice", "Jordana", "1"));
-        add(new Track("Warszawa","Krakowska","110"));
-        add(new Track("Gliwice","Zwycięstwa","2"));
+        updateJobList();
     }
 
     public void setActiveJob(Job job){
@@ -23,5 +21,11 @@ public class JobManager extends ArrayList<Job>{
 
     public Job getActiveJob(){
         return ActiveJob;
+    }
+
+    private void updateJobList (){
+        add(new Track("Katowice", "Jordana", "1"));
+        add(new Track("Warszawa","Krakowska","110"));
+        add(new Track("Gliwice","Zwycięstwa","2"));
     }
 }
