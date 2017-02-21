@@ -46,7 +46,7 @@ public class FragmentTracking extends Fragment {
     TextView textViewDistanceBillable;
     TextView textViewDistanceNonBillable;
 
-    TrackManager trackManager;
+    JobManager jobManager;
 
     StateC BillableTrackState;
     StateC NonBillableTrackState;
@@ -62,7 +62,7 @@ public class FragmentTracking extends Fragment {
 
     public FragmentTracking(Context context_){
         context = context_;
-        trackManager = ((MainActivity)context).getTrackManager();
+        jobManager = ((MainActivity)context).getJobManager();
     }
 
     Button activeStartStopButton = null;
@@ -158,7 +158,7 @@ public class FragmentTracking extends Fragment {
             @Override
             public void onClick(View v) {
                 String Destination = textViewDestination.getText().toString();
-                Track currentTrack = trackManager.getActiveTrack();
+                Track currentTrack = (Track)jobManager.getActiveJob();
                 if (currentTrack != null){
                     Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                             Uri.parse("google.navigation:q=" + currentTrack.Number + " " + currentTrack.Street + " " + currentTrack.City));
@@ -238,7 +238,7 @@ public class FragmentTracking extends Fragment {
     }
 
     public void onTrackChosen() {
-        Track track = trackManager.getActiveTrack();
+        Track track = (Track)jobManager.getActiveJob();
         if (track != null)
             textViewDestination.setText(track.TrackString);
     }

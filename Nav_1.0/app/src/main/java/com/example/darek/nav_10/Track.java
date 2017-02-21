@@ -4,7 +4,7 @@ package com.example.darek.nav_10;
  * Created by 212449139 on 2/16/2017.
  */
 
-public class Track {
+public class Track implements Job{
 
     String Alias;
     String City;
@@ -25,5 +25,40 @@ public class Track {
         Street = street;
         Number = number;
         TrackString = city + ", " + street + " "+ number;
+    }
+
+    @Override
+    public int getJobID() {
+        return 0;
+    }
+
+    @Override
+    public String getJobPrincipal() {
+        return null;
+    }
+
+    @Override
+    public void EnableJob() {
+
+    }
+
+    @Override
+    public void DisableJob() {
+
+    }
+
+    @Override
+    public void sendJobSummary() {
+
+    }
+
+    @Override
+    public void sendStatusUpdate() {
+
+    }
+
+    @Override
+    public String getJobName() {
+        return TrackString;
     }
 }

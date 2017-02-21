@@ -21,62 +21,63 @@ import java.util.List;
 /**
  * Created by 212449139 on 2/3/2017.
  */
-public class FragmentTrackList extends Fragment {
+public class FragmentJobList extends Fragment {
 
     Context context;
 
     private ListView listView;
-    private TrackListAdapter trackListAdapter;
-    private ListElementViewHolder currentTrack = null;
-    private TrackManager trackManager;
+    private JobListAdapter jobListAdapter;
+    private ListElementViewHolder currentJob = null;
+    private JobManager jobManager;
 
     private final int MARKED_ITEM_COLOR = 0xFF33B5E5;
     private final int ITEMS_COLOR = 0xFF0099CC;
 
-    onTrackSelectedListener mCallback;
+    onJobSelectedListener mCallback;
 
-    public FragmentTrackList (Context context){
+    public FragmentJobList(Context context){
         this.context = context;
         try {
-            trackManager = ((MainActivity) this.context).getTrackManager();
+            jobManager = ((MainActivity) this.context).getJobManager();
         }catch(ClassCastException e){
-            throw new ClassCastException("Tracking List Fragment cannot cast context to Main Activity");
+            throw new ClassCastException("Job List Fragment cannot cast context to Main Activity");
         }
     }
-    public interface onTrackSelectedListener {
-        public void onTrackSelected();
+    public interface onJobSelectedListener {
+        public void onJobSelected();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_track_list,container,false);
+        View view = inflater.inflate(R.layout.fragment_job_list,container,false);
 
-        listView = (ListView) view.findViewById(R.id.ListView_TrackList);
-        trackListAdapter = new TrackListAdapter(listView.getContext(),R.layout.track_list_item,trackManager);
-        listView.setAdapter(trackListAdapter);
+        listView = (ListView) view.findViewById(R.id.ListView_JobList);
+        jobListAdapter = new JobListAdapter(listView.getContext(),R.layout.job_list_item, jobManager);
+        listView.setAdapter(jobListAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String message = trackManager.get(position).TrackString;
+                Job job =  jobManager.get(position);
+                String message = job.getJobName();
                 Toast.makeText(listView.getContext(),message,Toast.LENGTH_LONG).show();
             }
         });
 
         try {
-            mCallback = ((onTrackSelectedListener)context);
+            mCallback = ((onJobSelectedListener)context);
         }catch (ClassCastException e){
-            throw new ClassCastException ("context to onTrackSelectedListener interface cast failed");
+            throw new ClassCastException ("context to onJobSelectedListener interface cast failed");
         }
 
         return view;
     }
 
-    private class TrackListAdapter extends ArrayAdapter<Track> {
+    private class JobListAdapter extends ArrayAdapter<Job> {
 
         int layout;
-        public TrackListAdapter(Context context, int resource, List<Track> objects) {
+        public JobListAdapter(Context context, int resource, List<Job> objects) {
             super(context, resource, objects);
             layout = resource;
         }
@@ -90,7 +91,7 @@ public class FragmentTrackList extends Fragment {
                 final ListElementViewHolder listElementViewHolder = new ListElementViewHolder((ImageView) convertView.findViewById(R.id.imageView_listItem),
                                                                                                 (TextView) convertView.findViewById(R.id.textView_listItem),
                                                                                                 (Button) convertView.findViewById(R.id.button_listItem),
-                                                                                                trackManager.get(position));
+                                                                                                jobManager.get(position));
                 listElementViewHolder.button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -110,26 +111,26 @@ public class FragmentTrackList extends Fragment {
         ImageView image;
         TextView text;
         Button button;
-        Track track;
+        Job job;
 
-        private ListElementViewHolder (ImageView imageView, TextView textView, Button button_, Track track_){
-            image = imageView;
-            text = textView;
-            text.setText(track_.TrackString);
-            track = track_;
-            button = button_;
+        private ListElementViewHolder (ImageView imageView, TextView textView, Button button, Job job){
+            this.image = imageView;
+            this.text = textView;
+            this.text.setText(job.getJobName());
+            this.job = job;
+            this.button = button;
         }
     }
 
     private void ItemClicked (ListElementViewHolder listElementViewHolder){
-        trackManager.setActiveTrack(listElementViewHolder.track);
-        if (null != currentTrack){
-            setListElementColor(currentTrack,ITEMS_COLOR);
+        jobManager.setActiveJob(listElementViewHolder.job);
+        if (null != currentJob){
+            setListElementColor(currentJob,ITEMS_COLOR);
         }
-        currentTrack = listElementViewHolder;
-        setListElementColor(currentTrack,MARKED_ITEM_COLOR);
+        currentJob = listElementViewHolder;
+        setListElementColor(currentJob,MARKED_ITEM_COLOR);
 
-        mCallback.onTrackSelected();
+        mCallback.onJobSelected();
     }
 
     private void setListElementColor (ListElementViewHolder listElementViewHolder  ,int color){

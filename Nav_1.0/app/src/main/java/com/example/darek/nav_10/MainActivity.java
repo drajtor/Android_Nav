@@ -3,38 +3,25 @@ package com.example.darek.nav_10;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.icu.text.DecimalFormat;
-import android.location.Location;
 import android.os.Build;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Timer;
-
-public class MainActivity extends AppCompatActivity implements FragmentTrackList.onTrackSelectedListener {
+public class MainActivity extends AppCompatActivity implements FragmentJobList.onJobSelectedListener {
 
     TabLayout tabLayout;
     ViewPager viewPager;
 
     FragmentTracking fragmentTracking;
-    FragmentTrackList fragmentTrackList;
+    FragmentJobList fragmentJobList;
 
-    private TrackManager trackManager = new TrackManager();
+    private JobManager jobManager = new JobManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements FragmentTrackList
     }
 
     @Override
-    public void onTrackSelected() {
+    public void onJobSelected() {
         fragmentTracking.onTrackChosen();
     }
 
@@ -106,8 +93,8 @@ public class MainActivity extends AppCompatActivity implements FragmentTrackList
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    fragmentTrackList = new FragmentTrackList(MainActivity.this);
-                    return fragmentTrackList;
+                    fragmentJobList = new FragmentJobList(MainActivity.this);
+                    return fragmentJobList;
                 case 1:
                     fragmentTracking = new FragmentTracking(MainActivity.this);
                     return fragmentTracking;
@@ -127,8 +114,8 @@ public class MainActivity extends AppCompatActivity implements FragmentTrackList
             return fragments[position];
         }
     }
-    public TrackManager getTrackManager(){
-        return trackManager;
+    public JobManager getJobManager(){
+        return jobManager;
     }
 }
 
