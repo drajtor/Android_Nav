@@ -77,7 +77,7 @@ public class FragmentTracking extends Fragment {
                 trackJob = (TrackJob)jobManager.getActiveJob();
                 if (trackJob != null){
                     float distance;
-                    distance = trackHandler.UpdateDistance();
+                    distance = trackHandler.ProcessDistanceUpdate();
                     if (trackHandler.getCurrentTrackType() == TRACK_BILLABLE) {
                         trackJob.setDistance(distance, TrackJob.Billability.BILLABLE);
                     }else{
@@ -97,14 +97,14 @@ public class FragmentTracking extends Fragment {
         buttonBillable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TrackTypeButtonsHandler(TrackHandler.TrackType.TRACK_BILLABLE);
+                TrackTypeButtonClicked(TrackHandler.TrackType.TRACK_BILLABLE);
             }
         });
         buttonNonBillable = (Button) view.findViewById(R.id.buttonNonBillable);
         buttonNonBillable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TrackTypeButtonsHandler(TrackHandler.TrackType.TRACK_NON_BILLABLE);
+                TrackTypeButtonClicked(TrackHandler.TrackType.TRACK_NON_BILLABLE);
             }
         });
 
@@ -112,18 +112,14 @@ public class FragmentTracking extends Fragment {
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UpdateState(TrackHandler.State.START);
-                trackHandler.setActiveTrackState(TrackHandler.State.START);
-                trackHandler.TracksStateHandler();
+                StateButtonClicked(TrackHandler.State.START);
             }
         });
         buttonPause = (Button) view.findViewById(R.id.buttonPause);
         buttonPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UpdateState(TrackHandler.State.PAUSE);
-                trackHandler.setActiveTrackState(TrackHandler.State.PAUSE);
-                trackHandler.TracksStateHandler();
+                StateButtonClicked(TrackHandler.State.PAUSE);
             }
         });
 
@@ -132,9 +128,7 @@ public class FragmentTracking extends Fragment {
         buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UpdateState(TrackHandler.State.STOP);
-                trackHandler.setActiveTrackState(TrackHandler.State.STOP);
-                trackHandler.TracksStateHandler();
+                StateButtonClicked(TrackHandler.State.STOP);
                 Intent intent = new Intent(context,TrackSummaryActivity.class);
                 startActivityForResult(intent,TRACK_SUMMARY_REQUEST_CODE);
             }
@@ -143,7 +137,7 @@ public class FragmentTracking extends Fragment {
         textViewDestination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String Destination = textViewDestination.getText().toString();
+//                String Destination = textViewDestination.getText().toString();
                 TrackJob currentTrackJob;
                 try{
                     currentTrackJob = (TrackJob)jobManager.getActiveJob();
@@ -159,7 +153,7 @@ public class FragmentTracking extends Fragment {
             }
         });
 
-        TrackTypeButtonsHandler(trackHandler.getCurrentTrackType());
+        TrackTypeButtonClicked(trackHandler.getCurrentTrackType());
         return view;
     }
 
@@ -178,21 +172,21 @@ public class FragmentTracking extends Fragment {
         }
     }
 
-    private void StateButtonsHandler (TrackHandler.State state){
+    private void ChangeStateButtonColor(TrackHandler.State state){
         switch (state){
             case START:
-                ChangeStateButtonColorOnClick(buttonStart);
+                ChangeActiveStateButtonColor(buttonStart);
                 break;
             case STOP:
-                ChangeStateButtonColorOnClick(buttonStop);
+                ChangeActiveStateButtonColor(buttonStop);
                 break;
             case PAUSE:
-                ChangeStateButtonColorOnClick(buttonPause);
+                ChangeActiveStateButtonColor(buttonPause);
                 break;
         }
     }
 
-    private void TrackTypeButtonsHandler (TrackHandler.TrackType trackType){
+    private void TrackTypeButtonClicked(TrackHandler.TrackType trackType){
         switch (trackType){
             case TRACK_BILLABLE:
                 ChangeTrackButtonColorOnClick(buttonBillable);
@@ -202,19 +196,21 @@ public class FragmentTracking extends Fragment {
                 ChangeTrackButtonColorOnClick(buttonNonBillable);
                 break;
         }
-        StateButtonsHandler (trackHandler.getTrackState(trackType));
+        ChangeStateButtonColor(trackHandler.getTrackState(trackType));
     }
 
-    private void UpdateState (TrackHandler.State state){
-        StateButtonsHandler(state);
+    private void StateButtonClicked(TrackHandler.State state){
+        ChangeStateButtonColor(state);
         if (activeTrackButton == buttonBillable){
             trackHandler.setCurrentTrackType (TRACK_BILLABLE);
         }else if(activeTrackButton == buttonNonBillable){
             trackHandler.setCurrentTrackType (TRACK_NON_BILLABLE);
         }
+        trackHandler.setActiveTrackState(state);
+        trackHandler.TracksStateHandler();
     }
 
-    private void ChangeStateButtonColorOnClick(Button button){
+    private void ChangeActiveStateButtonColor(Button button){
         if (activeStartStopButton != null){
             activeStartStopButton.setBackgroundColor(ITEMS_COLOR);
         }

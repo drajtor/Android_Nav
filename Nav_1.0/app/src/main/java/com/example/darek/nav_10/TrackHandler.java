@@ -88,7 +88,7 @@ public class TrackHandler {
         }
     }
 
-    public float UpdateDistance (){
+    public float ProcessDistanceUpdate(){
         return ActiveDistanceCounter.UpdateDistance();
     }
 
