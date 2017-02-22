@@ -19,7 +19,8 @@ public class TrackSummaryActivity extends AppCompatActivity {
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TrackSummaryActivity.this.finish();
+                setResult(RESULT_OK);
+                finish();
             }
         });
 
@@ -27,7 +28,8 @@ public class TrackSummaryActivity extends AppCompatActivity {
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TrackSummaryActivity.this.finish();
+                setResult(RESULT_CANCELED);
+                finish();
             }
         });
     }

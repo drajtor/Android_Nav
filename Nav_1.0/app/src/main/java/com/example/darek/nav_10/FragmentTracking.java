@@ -13,7 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 import static com.example.darek.nav_10.FragmentTracking.State.PAUSE;
 import static com.example.darek.nav_10.FragmentTracking.State.START;
 import static com.example.darek.nav_10.FragmentTracking.State.STOP;
@@ -57,8 +60,10 @@ public class FragmentTracking extends Fragment {
 
     GPSTracker gpsTracker;
 
-    private final int MARKED_ITEM_COLOR = 0xFF33B5E5;
-    private final int ITEMS_COLOR = 0xFF0099CC;
+    private static final int MARKED_ITEM_COLOR = 0xFF33B5E5;
+    private static final int ITEMS_COLOR = 0xFF0099CC;
+
+    private final int TRACK_SUMMARY_REQUEST_CODE = 200;
 
     public FragmentTracking(Context context_){
         context = context_;
@@ -134,7 +139,7 @@ public class FragmentTracking extends Fragment {
                 }
                 TracksStateHandler();
                 Intent intent = new Intent(context,TrackSummaryActivity.class);
-                context.startActivity(intent);
+                startActivityForResult(intent,TRACK_SUMMARY_REQUEST_CODE);
             }
         });
 
@@ -208,6 +213,22 @@ public class FragmentTracking extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == TRACK_SUMMARY_REQUEST_CODE){
+            switch (resultCode){
+                case RESULT_OK:
+                    Toast.makeText(context,"Raport sent",Toast.LENGTH_SHORT).show();
+                    break;
+                case RESULT_CANCELED:
+                    Toast.makeText(context,"Cancelled",Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    }
+
     private void ChangeStartStopPauseButtonColorOnClick(Button button){
         if (activeStartStopButton != null){
             activeStartStopButton.setBackgroundColor(ITEMS_COLOR);
