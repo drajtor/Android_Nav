@@ -24,8 +24,8 @@ public class JobManager extends ArrayList<Job>{
     }
 
     private void updateJobList (){
-        add(new Track("Katowice", "Jordana", "1"));
-        add(new Track("Warszawa","Krakowska","110"));
-        add(new Track("Gliwice","Zwycięstwa","2"));
+        add(new TrackJob("Katowice", "Jordana", "1"));
+        add(new TrackJob("Warszawa","Krakowska","110"));
+        add(new TrackJob("Gliwice","Zwycięstwa","2"));
     }
 }

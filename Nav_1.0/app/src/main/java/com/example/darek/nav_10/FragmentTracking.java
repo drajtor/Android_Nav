@@ -2,7 +2,6 @@ package com.example.darek.nav_10;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,22 +16,13 @@ import android.widget.Toast;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
-import static com.example.darek.nav_10.FragmentTracking.State.PAUSE;
-import static com.example.darek.nav_10.FragmentTracking.State.START;
-import static com.example.darek.nav_10.FragmentTracking.State.STOP;
-import static com.example.darek.nav_10.FragmentTracking.TrackType.TRACK_BILLABLE;
-import static com.example.darek.nav_10.FragmentTracking.TrackType.TRACK_NON_BILLABLE;
+import static com.example.darek.nav_10.TrackHandler.TrackType.TRACK_BILLABLE;
+import static com.example.darek.nav_10.TrackHandler.TrackType.TRACK_NON_BILLABLE;
 
 /**
  * Created by 212449139 on 2/3/2017.
  */
 public class FragmentTracking extends Fragment {
-
-    enum State {START, PAUSE, STOP,}
-    enum TrackType {TRACK_BILLABLE, TRACK_NON_BILLABLE}
-    private class StateC{
-        State state;
-    }
 
     Context context;
 
@@ -51,22 +41,16 @@ public class FragmentTracking extends Fragment {
 
     JobManager jobManager;
 
-    StateC BillableTrackState;
-    StateC NonBillableTrackState;
-    TrackType currentTrackType = TRACK_NON_BILLABLE;
-
-    DistanceCounter distanceCounterBillable;
-    DistanceCounter distanceCounterNonBillable;
-
-    GPSTracker gpsTracker;
+    TrackHandler trackHandler;
 
     private static final int MARKED_ITEM_COLOR = 0xFF33B5E5;
     private static final int ITEMS_COLOR = 0xFF0099CC;
 
     private final int TRACK_SUMMARY_REQUEST_CODE = 200;
 
-    public FragmentTracking(Context context_){
-        context = context_;
+    public FragmentTracking(Context context){
+        this.context = context;
+        trackHandler = new TrackHandler(context);
         jobManager = ((MainActivity)context).getJobManager();
     }
 
@@ -79,97 +63,80 @@ public class FragmentTracking extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_tracking, container, false);
 
-        distanceCounterBillable = new DistanceCounter();
-        distanceCounterNonBillable = new DistanceCounter();
         textViewDistanceBillable = (TextView) view.findViewById(R.id.textViewKilometersBillable);
         textViewDistanceNonBillable = (TextView) view.findViewById(R.id.textViewKilometersNonBillable);
         textViewCoordinates = (TextView) view.findViewById(R.id.TextViewGPSCoordinates);
         textViewGpsAccuracy = (TextView) view.findViewById(R.id.TextViewGPSAccuracy);
         textViewDestination = (TextView) view.findViewById(R.id.textViewDestination);
 
-        BillableTrackState = new StateC();
-        NonBillableTrackState = new StateC();
-        BillableTrackState.state = PAUSE;
-        NonBillableTrackState.state = PAUSE;
-
         final Handler secHandler_5 = new Handler();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Track track;
-                track = (Track)jobManager.getActiveJob();
-                if (track != null){
+                TrackJob trackJob;
+                trackJob = (TrackJob)jobManager.getActiveJob();
+                if (trackJob != null){
                     float distance;
-                    if (currentTrackType == TRACK_BILLABLE) {
-                        distance = distanceCounterBillable.UpdateDistance();
-                        textViewDistanceBillable.setText(String.format("%.2f", distance) + "\nkm");
-                        track.setDistanceBillable(distance, Track.Billability.BILLABLE);
+                    distance = trackHandler.UpdateDistance();
+                    if (trackHandler.getCurrentTrackType() == TRACK_BILLABLE) {
+                        trackJob.setDistance(distance, TrackJob.Billability.BILLABLE);
                     }else{
-                        distance = distanceCounterNonBillable.UpdateDistance();
-                        textViewDistanceNonBillable.setText(String.format("%.2f",distance) + "\nkm");
-                        track.setDistanceBillable(distance, Track.Billability.NON_BILLABLE);
+                        trackJob.setDistance(distance, TrackJob.Billability.NON_BILLABLE);
                     }
+                    distance = trackHandler.getDistance(TrackHandler.TrackType.TRACK_BILLABLE);
+                    textViewDistanceBillable.setText(String.format("%.2f", distance) + "\nkm");
+                    distance = trackHandler.getDistance(TrackHandler.TrackType.TRACK_NON_BILLABLE);
+                    textViewDistanceNonBillable.setText(String.format("%.2f",distance) + "\nkm");
                 }
                 secHandler_5.postDelayed(this, 5000);
             }
         };
         secHandler_5.post(runnable);
 
-        buttonStart = (Button) view.findViewById(R.id.buttonStart);
-        buttonStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (currentTrackType == TRACK_BILLABLE) {
-                    BillableTrackState.state = START;
-                }else{
-                    NonBillableTrackState.state = START;
-                }
-                TracksStateHandler();
-            }
-        });
-        buttonStop = (Button) view.findViewById(R.id.buttonStop);
-
-        buttonStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (currentTrackType == TRACK_BILLABLE) {
-                    BillableTrackState.state = STOP;
-                }else{
-                    NonBillableTrackState.state = STOP;
-                }
-                TracksStateHandler();
-                Intent intent = new Intent(context,TrackSummaryActivity.class);
-                startActivityForResult(intent,TRACK_SUMMARY_REQUEST_CODE);
-            }
-        });
-
-        buttonPause = (Button) view.findViewById(R.id.buttonPause);
-        buttonPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (currentTrackType == TRACK_BILLABLE) {
-                    BillableTrackState.state = PAUSE;
-                }else{
-                    NonBillableTrackState.state = PAUSE;
-                }
-                TracksStateHandler();
-            }
-        });
-
         buttonBillable = (Button) view.findViewById(R.id.buttonBillable);
         buttonBillable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentTrackType = TRACK_BILLABLE;
-                TracksStateHandler();
+                TrackTypeButtonsHandler(TrackHandler.TrackType.TRACK_BILLABLE);
             }
         });
         buttonNonBillable = (Button) view.findViewById(R.id.buttonNonBillable);
         buttonNonBillable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentTrackType = TRACK_NON_BILLABLE;
-                TracksStateHandler();
+                TrackTypeButtonsHandler(TrackHandler.TrackType.TRACK_NON_BILLABLE);
+            }
+        });
+
+        buttonStart = (Button) view.findViewById(R.id.buttonStart);
+        buttonStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UpdateState(TrackHandler.State.START);
+                trackHandler.setActiveTrackState(TrackHandler.State.START);
+                trackHandler.TracksStateHandler();
+            }
+        });
+        buttonPause = (Button) view.findViewById(R.id.buttonPause);
+        buttonPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UpdateState(TrackHandler.State.PAUSE);
+                trackHandler.setActiveTrackState(TrackHandler.State.PAUSE);
+                trackHandler.TracksStateHandler();
+            }
+        });
+
+        buttonStop = (Button) view.findViewById(R.id.buttonStop);
+
+        buttonStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UpdateState(TrackHandler.State.STOP);
+                trackHandler.setActiveTrackState(TrackHandler.State.STOP);
+                trackHandler.TracksStateHandler();
+                Intent intent = new Intent(context,TrackSummaryActivity.class);
+                startActivityForResult(intent,TRACK_SUMMARY_REQUEST_CODE);
             }
         });
 
@@ -177,40 +144,22 @@ public class FragmentTracking extends Fragment {
             @Override
             public void onClick(View v) {
                 String Destination = textViewDestination.getText().toString();
-                Track currentTrack;
+                TrackJob currentTrackJob;
                 try{
-                    currentTrack = (Track)jobManager.getActiveJob();
+                    currentTrackJob = (TrackJob)jobManager.getActiveJob();
                 }
                 catch(ClassCastException e){
-                    throw new ClassCastException("Fragment Tracking error while casting Job to Track");
+                    throw new ClassCastException("Fragment Tracking error while casting Job to TrackJob");
                 }
-                if (currentTrack != null){
+                if (currentTrackJob != null){
                     Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                            Uri.parse("google.navigation:q=" + currentTrack.Number + " " + currentTrack.Street + " " + currentTrack.City));
+                            Uri.parse("google.navigation:q=" + currentTrackJob.Number + " " + currentTrackJob.Street + " " + currentTrackJob.City));
                     startActivity(intent);
                 }
             }
         });
 
-        gpsTracker = new GPSTracker(context) {
-            @Override
-            public void onLocationChanged(Location location) {
-                if (location != null) {
-                    if (BillableTrackState.state == START){
-                        distanceCounterBillable.UpdateLocation(location);
-                    }
-                    else if (NonBillableTrackState.state == START){
-                        distanceCounterNonBillable.UpdateLocation(location);
-                    }
-                    textViewCoordinates.setText(Double.toString(location.getLongitude()) +
-                            "\n" +
-                            Double.toString(location.getLatitude()));
-                    textViewGpsAccuracy.setText("GPS Accuracy\n" + Float.toString(location.getAccuracy()));
-                }
-            }
-        };
-        TracksStateHandler();
-
+        TrackTypeButtonsHandler(trackHandler.getCurrentTrackType());
         return view;
     }
 
@@ -229,7 +178,43 @@ public class FragmentTracking extends Fragment {
         }
     }
 
-    private void ChangeStartStopPauseButtonColorOnClick(Button button){
+    private void StateButtonsHandler (TrackHandler.State state){
+        switch (state){
+            case START:
+                ChangeStateButtonColorOnClick(buttonStart);
+                break;
+            case STOP:
+                ChangeStateButtonColorOnClick(buttonStop);
+                break;
+            case PAUSE:
+                ChangeStateButtonColorOnClick(buttonPause);
+                break;
+        }
+    }
+
+    private void TrackTypeButtonsHandler (TrackHandler.TrackType trackType){
+        switch (trackType){
+            case TRACK_BILLABLE:
+                ChangeTrackButtonColorOnClick(buttonBillable);
+                break;
+            case TRACK_NON_BILLABLE:
+            default:
+                ChangeTrackButtonColorOnClick(buttonNonBillable);
+                break;
+        }
+        StateButtonsHandler (trackHandler.getTrackState(trackType));
+    }
+
+    private void UpdateState (TrackHandler.State state){
+        StateButtonsHandler(state);
+        if (activeTrackButton == buttonBillable){
+            trackHandler.setCurrentTrackType (TRACK_BILLABLE);
+        }else if(activeTrackButton == buttonNonBillable){
+            trackHandler.setCurrentTrackType (TRACK_NON_BILLABLE);
+        }
+    }
+
+    private void ChangeStateButtonColorOnClick(Button button){
         if (activeStartStopButton != null){
             activeStartStopButton.setBackgroundColor(ITEMS_COLOR);
         }
@@ -242,40 +227,6 @@ public class FragmentTracking extends Fragment {
         }
         button.setBackgroundColor(MARKED_ITEM_COLOR);
         activeTrackButton = button;
-    }
-
-    private void TracksStateHandler (){
-        switch (currentTrackType){
-            case TRACK_BILLABLE:
-                StateHandler(BillableTrackState,NonBillableTrackState,distanceCounterBillable,distanceCounterNonBillable);
-                ChangeTrackButtonColorOnClick(buttonBillable);
-                break;
-            case TRACK_NON_BILLABLE:
-            default:
-                StateHandler(NonBillableTrackState,BillableTrackState,distanceCounterNonBillable,distanceCounterBillable);
-                ChangeTrackButtonColorOnClick(buttonNonBillable);
-                break;
-        }
-    }
-
-    private void StateHandler (StateC state, StateC previousState,
-                               DistanceCounter activeCounter, DistanceCounter pausedCounter ){
-        switch (state.state){
-            case START:
-                activeCounter.StartCountingDistance(gpsTracker.getLocation());
-                pausedCounter.StopCountingDistance();
-                previousState.state = PAUSE;
-                ChangeStartStopPauseButtonColorOnClick(buttonStart);
-                break;
-            case STOP:
-                activeCounter.ResetCounter();
-                ChangeStartStopPauseButtonColorOnClick(buttonStop);
-                break;
-            case PAUSE:
-                activeCounter.StopCountingDistance();
-                ChangeStartStopPauseButtonColorOnClick(buttonPause);
-                break;
-        }
     }
 
     public void onTrackChosen() {

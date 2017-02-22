@@ -4,7 +4,7 @@ package com.example.darek.nav_10;
  * Created by 212449139 on 2/16/2017.
  */
 
-public class Track implements Job{
+public class TrackJob implements Job{
 
     public enum Billability {BILLABLE, NON_BILLABLE};
 
@@ -20,21 +20,21 @@ public class Track implements Job{
     private int TimeBillable;
     private int TimeNonBillable;
 
-    public Track (){
+    public TrackJob(){
 
     }
-    public Track (String alias){
+    public TrackJob(String alias){
         Alias = alias;
         TrackString = alias;
     }
-    public Track (String city, String street, String number){
+    public TrackJob(String city, String street, String number){
         City = city;
         Street = street;
         Number = number;
         TrackString = city + ", " + street + " "+ number;
     }
 
-    public void setDistanceBillable(float distance, Billability billability){
+    public void setDistance(float distance, Billability billability){
         if (billability == Billability.BILLABLE){
             DistanceBillable = distance;
         }else {
