@@ -15,10 +15,10 @@ public class TrackJob extends Job{
     String Number;
     String TrackString;
 
-    private float DistanceBillable;
-    private float DistanceNonBillable;
-    private int TimeBillable;
-    private int TimeNonBillable;
+    protected float DistanceBillable;
+    protected float DistanceNonBillable;
+    protected int TimeBillable;
+    protected int TimeNonBillable;
 
     public TrackJob(){
 

@@ -6,7 +6,7 @@ package com.example.darek.nav_10;
 
 public interface JobRaport {
 
-
+    public abstract void FillRaportWithJobData();
     public abstract void sendJobSummaryRaport();
 
 }

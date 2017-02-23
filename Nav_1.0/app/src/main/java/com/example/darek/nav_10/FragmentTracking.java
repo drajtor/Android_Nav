@@ -168,6 +168,7 @@ public class FragmentTracking extends Fragment {
             switch (resultCode){
                 case RESULT_OK:
                     Toast.makeText(context,"Raport sent",Toast.LENGTH_SHORT).show();
+//                    jobManager.remove(jobManager.getActiveJob());
                     break;
                 case RESULT_CANCELED:
                     Toast.makeText(context,"Cancelled",Toast.LENGTH_SHORT).show();

@@ -22,7 +22,7 @@ public class TrackSummaryActivity extends AppCompatActivity {
         intent.getSerializableExtra("trackJob");
 
         TrackJob trackJob =  (TrackJob)(intent.getSerializableExtra("trackJob"));
-        trackRaport = (TrackRaport) trackJob;
+        trackRaport = new TrackRaport(trackJob);
 
         buttonOK = (Button) findViewById(R.id.button_AcceptTrackSummary);
         buttonOK.setOnClickListener(new View.OnClickListener() {
