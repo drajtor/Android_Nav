@@ -18,6 +18,11 @@ public class TrackHandler {
     enum TrackType {TRACK_BILLABLE, TRACK_NON_BILLABLE}
     private class StateC{
         State state;
+
+        public StateC (){}
+        public StateC (StateC stateC){
+            this.state = stateC.state;
+        }
     }
 
     Context context;
@@ -53,6 +58,19 @@ public class TrackHandler {
                 }
             }
         };
+    }
+
+    public TrackHandler (TrackHandler trackHandler) {
+        /*Copy value*/
+        this.ActiveTrackState.state = trackHandler.ActiveTrackState.state;
+        this.currentTrackType = trackHandler.currentTrackType;
+        this.BillableTrackState = new StateC(trackHandler.BillableTrackState);
+        this.NonBillableTrackState = new StateC(trackHandler.NonBillableTrackState);
+        /*Copy Reference*/
+        this.context = trackHandler.context;
+        this.distanceCounterBillable = trackHandler.distanceCounterBillable;
+        this.distanceCounterNonBillable = trackHandler.distanceCounterNonBillable;
+        this.gpsTracker = trackHandler.gpsTracker;
     }
 
     public TrackType getCurrentTrackType (){

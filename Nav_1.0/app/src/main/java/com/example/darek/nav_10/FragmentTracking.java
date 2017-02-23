@@ -42,6 +42,7 @@ public class FragmentTracking extends Fragment {
     JobManager jobManager;
 
     TrackHandler trackHandler;
+    TrackHandler trackHandlerBackup;
 
     private static final int MARKED_ITEM_COLOR = 0xFF33B5E5;
     private static final int ITEMS_COLOR = 0xFF0099CC;
@@ -122,12 +123,11 @@ public class FragmentTracking extends Fragment {
                 StateButtonClicked(TrackHandler.State.PAUSE);
             }
         });
-
         buttonStop = (Button) view.findViewById(R.id.buttonStop);
-
         buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                trackHandlerBackup = new TrackHandler(trackHandler);
                 StateButtonClicked(TrackHandler.State.STOP);
                 Intent intent = new Intent(context,TrackSummaryActivity.class);
                 startActivityForResult(intent,TRACK_SUMMARY_REQUEST_CODE);
@@ -137,7 +137,6 @@ public class FragmentTracking extends Fragment {
         textViewDestination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String Destination = textViewDestination.getText().toString();
                 TrackJob currentTrackJob;
                 try{
                     currentTrackJob = (TrackJob)jobManager.getActiveJob();
@@ -167,6 +166,12 @@ public class FragmentTracking extends Fragment {
                     break;
                 case RESULT_CANCELED:
                     Toast.makeText(context,"Cancelled",Toast.LENGTH_SHORT).show();
+                    if (trackHandlerBackup != null)
+                        trackHandler = trackHandlerBackup;
+                    if (activeTrackButton == buttonBillable)
+                        TrackTypeButtonClicked(TRACK_BILLABLE);
+                    else
+                        TrackTypeButtonClicked(TRACK_NON_BILLABLE);
                     break;
             }
         }
