@@ -10,6 +10,8 @@ public class TrackSummaryActivity extends AppCompatActivity {
     Button buttonOK;
     Button buttonCancel;
 
+    TrackRaport trackRaport = new TrackRaport();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

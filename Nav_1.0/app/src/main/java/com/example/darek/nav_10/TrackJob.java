@@ -4,7 +4,7 @@ package com.example.darek.nav_10;
  * Created by 212449139 on 2/16/2017.
  */
 
-public class TrackJob implements Job{
+public class TrackJob extends Job{
 
     public enum Billability {BILLABLE, NON_BILLABLE};
 
@@ -34,6 +34,27 @@ public class TrackJob implements Job{
         TrackString = city + ", " + street + " "+ number;
     }
 
+    public float getDistanceBillable() {
+        return DistanceBillable;
+    }
+
+    public float getDistanceNonBillable() {
+        return DistanceNonBillable;
+    }
+
+    public int getTimeBillable() {
+        return TimeBillable;
+    }
+
+    public int getTimeNonBillable() {
+        return TimeNonBillable;
+    }
+
+    public String getJobName() {
+        return TrackString;
+    }
+
+
     public void setDistance(float distance, Billability billability){
         if (billability == Billability.BILLABLE){
             DistanceBillable = distance;
@@ -51,37 +72,8 @@ public class TrackJob implements Job{
     }
 
     @Override
-    public int getJobID() {
-        return 0;
-    }
-
-    @Override
-    public String getJobPrincipal() {
-        return null;
-    }
-
-    @Override
-    public void EnableJob() {
-
-    }
-
-    @Override
-    public void DisableJob() {
-
-    }
-
-    @Override
-    public void sendJobSummary() {
-
-    }
-
-    @Override
     public void sendStatusUpdate() {
 
     }
 
-    @Override
-    public String getJobName() {
-        return TrackString;
-    }
 }
