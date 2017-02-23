@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
+
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static com.example.darek.nav_10.TrackHandler.TrackType.TRACK_BILLABLE;
@@ -129,7 +131,10 @@ public class FragmentTracking extends Fragment {
             public void onClick(View v) {
                 trackHandlerBackup = new TrackHandler(trackHandler);
                 StateButtonClicked(TrackHandler.State.STOP);
+
+                TrackJob trackJob = (TrackJob)jobManager.getActiveJob();
                 Intent intent = new Intent(context,TrackSummaryActivity.class);
+                intent.putExtra("trackJob", trackJob);
                 startActivityForResult(intent,TRACK_SUMMARY_REQUEST_CODE);
             }
         });
