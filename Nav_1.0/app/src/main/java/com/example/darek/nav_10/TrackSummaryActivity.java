@@ -28,7 +28,6 @@ public class TrackSummaryActivity extends AppCompatActivity {
 
     TrackRaport trackRaport;
 
-//    HashMap<String,String> RaportMap = new HashMap<String,String>() ;
     ArrayList<ListElement> raportList = new ArrayList<ListElement>();
 
     @Override
@@ -36,10 +35,15 @@ public class TrackSummaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_summary);
 
-//        RaportMap.put("kaka","demona");
-//        RaportMap.put("lala","haha");
-        raportList.add(new ListElement("ksks","ksss"));
-        raportList.add(new ListElement("sadfasd","dfhds"));
+        raportList.add(new ListElement("ID",""));
+        raportList.add(new ListElement("JobType",""));
+        raportList.add(new ListElement("Principal",""));
+        raportList.add(new ListElement("Name",""));
+        raportList.add(new ListElement("Start",""));
+        raportList.add(new ListElement("Finish",""));
+        raportList.add(new ListElement("Distance",""));
+        raportList.add(new ListElement("Time",""));
+
 
         Intent intent= getIntent();
         intent.getSerializableExtra("trackJob");
@@ -69,7 +73,6 @@ public class TrackSummaryActivity extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 
     private class ListAdapter extends ArrayAdapter<ListElement> {
@@ -107,9 +110,9 @@ public class TrackSummaryActivity extends AppCompatActivity {
         ListElementViewHolder (TextView textView, EditText editText,ListElement listElement){
             this.listElement=listElement;
             this.ParameterName = textView;
-            this.ParameterName.setText(listElement.Parameter);
+            this.ParameterName.setText(listElement.ParameterName);
             this.Parameter = editText;
-            this.Parameter.setText(listElement.ParameterName);
+            this.Parameter.setText(listElement.Parameter);
 
         }
     }
