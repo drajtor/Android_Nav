@@ -137,7 +137,11 @@ public class FragmentTracking extends Fragment {
 
                     TrackJob trackJob = (TrackJob)jobManager.getActiveJob();
                     Intent intent = new Intent(context,TrackSummaryActivity.class);
-                    intent.putExtra("trackJob", trackJob);
+                    intent.putExtra("trackJob", (Serializable) trackJob);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putSerializable("trackJob", trackJob);
+//                    intent.putExtras(bundle);
+
                     startActivityForResult(intent,TRACK_SUMMARY_REQUEST_CODE);
                 }else{
                     Toast.makeText(context,"No Track Scheduled",Toast.LENGTH_SHORT).show();
