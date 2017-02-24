@@ -46,6 +46,8 @@ public class FragmentTracking extends Fragment {
     TrackHandler trackHandler;
     TrackHandler trackHandlerBackup;
 
+    onJobListUpdatedListener mCallback;
+
     private static final int MARKED_ITEM_COLOR = 0xFF33B5E5;
     private static final int ITEMS_COLOR = 0xFF0099CC;
 
@@ -168,7 +170,9 @@ public class FragmentTracking extends Fragment {
             switch (resultCode){
                 case RESULT_OK:
                     Toast.makeText(context,"Raport sent",Toast.LENGTH_SHORT).show();
-//                    jobManager.remove(jobManager.getActiveJob());
+                    jobManager.remove(jobManager.getActiveJob());
+                    mCallback = (onJobListUpdatedListener) context;
+                    mCallback.onJobListUpdated();
                     break;
                 case RESULT_CANCELED:
                     Toast.makeText(context,"Cancelled",Toast.LENGTH_SHORT).show();

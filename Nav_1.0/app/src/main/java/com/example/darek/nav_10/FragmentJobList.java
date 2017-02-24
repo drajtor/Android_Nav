@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by 212449139 on 2/3/2017.
  */
-public class FragmentJobList extends Fragment {
+public class FragmentJobList extends Fragment  {
 
     Context context;
 
@@ -43,6 +43,7 @@ public class FragmentJobList extends Fragment {
             throw new ClassCastException("Job List Fragment cannot cast context to Main Activity");
         }
     }
+
     public interface onJobSelectedListener {
         public void onJobSelected();
     }
@@ -137,5 +138,10 @@ public class FragmentJobList extends Fragment {
         listElementViewHolder.text.setBackgroundColor(color);
         listElementViewHolder.image.setBackgroundColor(color);
         listElementViewHolder.button.setBackgroundColor(color);
+    }
+
+    public void onJobListUpdate() {
+        jobListAdapter = new JobListAdapter(listView.getContext(),R.layout.job_list_item, jobManager);
+        listView.setAdapter(jobListAdapter);
     }
 }
