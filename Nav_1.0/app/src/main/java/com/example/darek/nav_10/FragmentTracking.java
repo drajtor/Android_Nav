@@ -131,13 +131,17 @@ public class FragmentTracking extends Fragment {
         buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackHandlerBackup = new TrackHandler(trackHandler);
-                StateButtonClicked(TrackHandler.State.STOP);
+                if (jobManager.getActiveJob() != null){
+                    trackHandlerBackup = new TrackHandler(trackHandler);
+                    StateButtonClicked(TrackHandler.State.STOP);
 
-                TrackJob trackJob = (TrackJob)jobManager.getActiveJob();
-                Intent intent = new Intent(context,TrackSummaryActivity.class);
-                intent.putExtra("trackJob", trackJob);
-                startActivityForResult(intent,TRACK_SUMMARY_REQUEST_CODE);
+                    TrackJob trackJob = (TrackJob)jobManager.getActiveJob();
+                    Intent intent = new Intent(context,TrackSummaryActivity.class);
+                    intent.putExtra("trackJob", trackJob);
+                    startActivityForResult(intent,TRACK_SUMMARY_REQUEST_CODE);
+                }else{
+                    Toast.makeText(context,"No Track Scheduled",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -202,27 +206,31 @@ public class FragmentTracking extends Fragment {
     }
 
     private void TrackTypeButtonClicked(TrackHandler.TrackType trackType){
-        switch (trackType){
-            case TRACK_BILLABLE:
-                ChangeTrackButtonColorOnClick(buttonBillable);
-                break;
-            case TRACK_NON_BILLABLE:
-            default:
-                ChangeTrackButtonColorOnClick(buttonNonBillable);
-                break;
-        }
-        ChangeStateButtonColor(trackHandler.getTrackState(trackType));
+            switch (trackType){
+                case TRACK_BILLABLE:
+                    ChangeTrackButtonColorOnClick(buttonBillable);
+                    break;
+                case TRACK_NON_BILLABLE:
+                default:
+                    ChangeTrackButtonColorOnClick(buttonNonBillable);
+                    break;
+            }
+            ChangeStateButtonColor(trackHandler.getTrackState(trackType));
     }
 
     private void StateButtonClicked(TrackHandler.State state){
-        ChangeStateButtonColor(state);
-        if (activeTrackButton == buttonBillable){
-            trackHandler.setCurrentTrackType (TRACK_BILLABLE);
-        }else if(activeTrackButton == buttonNonBillable){
-            trackHandler.setCurrentTrackType (TRACK_NON_BILLABLE);
+        if (jobManager.getActiveJob() != null){
+            ChangeStateButtonColor(state);
+            if (activeTrackButton == buttonBillable){
+                trackHandler.setCurrentTrackType (TRACK_BILLABLE);
+            }else if(activeTrackButton == buttonNonBillable){
+                trackHandler.setCurrentTrackType (TRACK_NON_BILLABLE);
+            }
+            trackHandler.setActiveTrackState(state);
+            trackHandler.TracksStateHandler();
+        }else{
+            Toast.makeText(context,"No Track Scheduled",Toast.LENGTH_SHORT).show();
         }
-        trackHandler.setActiveTrackState(state);
-        trackHandler.TracksStateHandler();
     }
 
     private void ChangeActiveStateButtonColor(Button button){

@@ -10,117 +10,37 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.darek.nav_10.TrackSummaryActivity">
 
-    <TextView
-        android:text="ID: "
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView_trackID"
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textSize="18sp" />
-
-    <TextView
-        android:text="Start Point:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView_StartPoint"
-        android:layout_below="@+id/textView_trackID"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textSize="18sp" />
-
-    <TextView
-        android:text="Destiny:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_StartPoint"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/textView_FinishPoint"
-        android:textSize="18sp" />
-
-    <TextView
-        android:text="Distance Billable:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_FinishPoint"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/TextView_DistanceBillable"
-        android:textSize="18sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/TextView_DistanceBillable"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/textView_DistanceNonBillable"
-        android:text="Distance Non Billable:"
-        android:textSize="18sp" />
-
-    <TextView
-        android:text="Time Billable:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_DistanceNonBillable"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/textView_TimeBillable"
-        android:textSize="18sp" />
-
-    <TextView
-        android:text="Time Billable:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_TimeBillable"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/textView_TimeNonBillable"
-        android:textSize="18sp" />
-
-    <TextView
-        android:text="Vehicle:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_TimeNonBillable"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/textView_Vehicle"
-        android:textSize="18sp" />
-
-    <TextView
-        android:text="Comments:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_Vehicle"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/textView_Comments"
-        android:textSize="18sp" />
+        android:layout_above="@+id/button_AcceptTrackSummary"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/ListView_JobRaportList" />
 
     <Button
-        android:text="Ok"
+        android:text="Cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/button_cancelTrackSummary"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="120dp"
-        android:id="@+id/button_AcceptTrackSummary"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
     <Button
-        android:text="Cancel"
+        android:text="Ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/button_AcceptTrackSummary"
-        android:layout_alignEnd="@+id/button_AcceptTrackSummary"
-        android:layout_marginBottom="47dp"
-        android:id="@+id/button_cancelTrackSummary"
+        android:id="@+id/button_AcceptTrackSummary"
+        android:layout_above="@+id/button_cancelTrackSummary"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
