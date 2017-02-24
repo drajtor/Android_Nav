@@ -21,15 +21,13 @@ public class TrackJob extends Job{
     protected int TimeNonBillable;
 
     public TrackJob(){
-//        super();
+
     }
     public TrackJob(String alias){
-//        super();
         Alias = alias;
         TrackString = alias;
     }
     public TrackJob(String city, String street, String number){
-//        super();
         City = city;
         Street = street;
         Number = number;

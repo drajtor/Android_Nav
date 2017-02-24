@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,33 +35,21 @@ public class TrackSummaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_summary);
 
-
-//        raportList.add(new ListElement("ID",""));
-//        raportList.add(new ListElement("JobType",""));
-//        raportList.add(new ListElement("Principal",""));
-//        raportList.add(new ListElement("Name",""));
-//        raportList.add(new ListElement("Start",""));
-//        raportList.add(new ListElement("Finish",""));
-//        raportList.add(new ListElement("Distance",""));
-//        raportList.add(new ListElement("Time",""));
+        raportList.add(new ListElement("ID",""));
+        raportList.add(new ListElement("JobType",""));
+        raportList.add(new ListElement("Principal",""));
+        raportList.add(new ListElement("Name",""));
+        raportList.add(new ListElement("Start",""));
+        raportList.add(new ListElement("Finish",""));
+        raportList.add(new ListElement("Distance",""));
+        raportList.add(new ListElement("Time",""));
 
 
         Intent intent= getIntent();
-//        intent.getSerializableExtra("trackJob");
+        intent.getSerializableExtra("trackJob");
 
-        Job trackJob =  (Job)intent.getSerializableExtra("trackJob");
-//        Job trackJob =  (Job)(intent.getExtras().getSerializable("trackJob"));
-//        HashMap<String,Object> trackJob =  (HashMap<String,Object>)(intent.getSerializableExtra("trackJob"));
-        if (trackJob instanceof Job){
-            Toast.makeText(getApplicationContext(),"KAKA",Toast.LENGTH_SHORT).show();
-        }
-
-//        trackRaport = new TrackRaport(trackJob);
-
-//        for (HashMap.Entry<String,Object> entry: trackRaport.entrySet() ) {
-//            raportList.add(new ListElement(entry.getKey(),entry.getValue().toString()));
-//        }
-
+        TrackJob trackJob =  (TrackJob)(intent.getSerializableExtra("trackJob"));
+        trackRaport = new TrackRaport(trackJob);
 
         listView = (ListView) findViewById(R.id.ListView_JobRaportList);
         listAdapter = new ListAdapter(getApplicationContext(),R.layout.job_raport_list_item,raportList);
