@@ -1,5 +1,6 @@
 package com.example.darek.nav_10;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,6 +16,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.Serializable;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -40,6 +49,8 @@ public class FragmentTracking extends Fragment {
 
     TextView textViewDistanceBillable;
     TextView textViewDistanceNonBillable;
+    TextView textViewTimeBillable;
+    TextView textViewTimeNonBillable;
 
     JobManager jobManager;
 
@@ -47,6 +58,8 @@ public class FragmentTracking extends Fragment {
     TrackHandler trackHandlerBackup;
 
     onJobListUpdatedListener mCallback;
+
+    Timer TimerSecond;
 
     private static final int MARKED_ITEM_COLOR = 0xFF33B5E5;
     private static final int ITEMS_COLOR = 0xFF0099CC;
@@ -66,10 +79,12 @@ public class FragmentTracking extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_tracking, container, false);
+        final View view = inflater.inflate(R.layout.fragment_tracking, container, false);
 
         textViewDistanceBillable = (TextView) view.findViewById(R.id.textViewKilometersBillable);
         textViewDistanceNonBillable = (TextView) view.findViewById(R.id.textViewKilometersNonBillable);
+        textViewTimeBillable = (TextView) view.findViewById(R.id.textViewTimeBillable);
+        textViewTimeNonBillable= (TextView) view.findViewById(R.id.textViewTimeNonBillable);
         textViewCoordinates = (TextView) view.findViewById(R.id.TextViewGPSCoordinates);
         textViewGpsAccuracy = (TextView) view.findViewById(R.id.TextViewGPSAccuracy);
         textViewDestination = (TextView) view.findViewById(R.id.textViewDestination);
@@ -97,6 +112,31 @@ public class FragmentTracking extends Fragment {
             }
         };
         secHandler_5.post(runnable);
+
+        TimerSecond = new Timer();
+        TimerSecond.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Activity activity = (Activity)context;
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        TimeCounter timeCounter;
+                        timeCounter = trackHandler.ProcessTimeUpdate();
+
+                        String Hours = (timeCounter.Hours <= 9) ? "0" + Integer.toString(timeCounter.Hours) : Integer.toString(timeCounter.Hours);
+                        String Minutes = (timeCounter.Minutes <= 9) ? "0" + Integer.toString(timeCounter.Minutes) : Integer.toString(timeCounter.Minutes);
+                        String Seconds = (timeCounter.Seconds <= 9) ? "0" + Integer.toString(timeCounter.Seconds) : Integer.toString(timeCounter.Seconds);
+
+                        if (trackHandler.getCurrentTrackType() == TRACK_BILLABLE) {
+                            textViewTimeBillable.setText(Hours + ":" + Minutes + ":" + Seconds);
+                        }else{
+                            textViewTimeNonBillable.setText(Hours + ":" + Minutes + ":" + Seconds);
+                        }
+                    }
+                });
+            }
+        },1000,1000);
 
         buttonBillable = (Button) view.findViewById(R.id.buttonBillable);
         buttonBillable.setOnClickListener(new View.OnClickListener() {

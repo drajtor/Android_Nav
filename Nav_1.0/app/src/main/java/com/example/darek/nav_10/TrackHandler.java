@@ -3,6 +3,8 @@ package com.example.darek.nav_10;
 import android.content.Context;
 import android.location.Location;
 
+import java.sql.Time;
+
 import static com.example.darek.nav_10.TrackHandler.State.PAUSE;
 import static com.example.darek.nav_10.TrackHandler.State.START;
 import static com.example.darek.nav_10.TrackHandler.TrackType.TRACK_BILLABLE;
@@ -34,6 +36,10 @@ public class TrackHandler {
     private DistanceCounter distanceCounterBillable = new DistanceCounter();
     private DistanceCounter distanceCounterNonBillable = new DistanceCounter();
     private DistanceCounter ActiveDistanceCounter = distanceCounterNonBillable;
+
+    private TimeCounter TimeCounterBillable = new TimeCounter();
+    private TimeCounter TimeCounterNonBillable = new TimeCounter();
+    private TimeCounter ActiveTimeCounter = TimeCounterNonBillable;
 
     private TrackType currentTrackType = TRACK_NON_BILLABLE;
 
@@ -82,9 +88,11 @@ public class TrackHandler {
         if (currentTrackType == TRACK_BILLABLE){
             ActiveTrackState = BillableTrackState;
             ActiveDistanceCounter = distanceCounterBillable;
+            ActiveTimeCounter = TimeCounterBillable;
         }else{
             ActiveTrackState = NonBillableTrackState;
             ActiveDistanceCounter = distanceCounterNonBillable;
+            ActiveTimeCounter = TimeCounterNonBillable;
         }
     }
 
@@ -108,6 +116,12 @@ public class TrackHandler {
 
     public float ProcessDistanceUpdate(){
         return ActiveDistanceCounter.UpdateDistance();
+    }
+
+    public TimeCounter ProcessTimeUpdate(){
+        if (ActiveTrackState.state == START)
+            ActiveTimeCounter.OnOneSecondTick();
+        return ActiveTimeCounter;
     }
 
     public float getDistance (TrackType trackType){

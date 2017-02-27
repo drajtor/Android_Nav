@@ -87,7 +87,7 @@
             android:id="@+id/buttonBillable"
             android:background="@android:color/holo_blue_dark"
             android:gravity="bottom|center"
-            android:paddingBottom="20dp"
+            android:paddingBottom="10dp"
             android:textSize="18sp"
             android:layout_weight="1" />
 
@@ -98,7 +98,7 @@
             android:id="@+id/buttonNonBillable"
             android:background="@android:color/holo_blue_dark"
             android:textColor="@android:color/background_light"
-            android:paddingBottom="20dp"
+            android:paddingBottom="10dp"
             android:textSize="18sp"
             android:gravity="bottom|center"
             android:layout_weight="1"
@@ -109,10 +109,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:id="@+id/KilometersLayout"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="75dp">
+        android:layout_marginTop="55dp">
 
         <TextView
             android:text="0\nkm"
@@ -120,7 +121,7 @@
             android:layout_height="fill_parent"
             android:id="@+id/textViewKilometersBillable"
             tools:text="0km"
-            android:textSize="40sp"
+            android:textSize="30sp"
             android:layout_weight="1"
             android:textAlignment="center" />
 
@@ -130,7 +131,36 @@
             android:layout_height="fill_parent"
             android:id="@+id/textViewKilometersNonBillable"
             tools:text="0km"
-            android:textSize="40sp"
+            android:textSize="30sp"
+            android:layout_weight="1"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignTop="@id/KilometersLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="100dp">
+
+        <TextView
+            android:text="00:00:00"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/textViewTimeBillable"
+            tools:text="00:00:00"
+            android:textSize="30sp"
+            android:layout_weight="1"
+            android:textAlignment="center" />
+
+        <TextView
+            android:text="00:00:00"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/textViewTimeNonBillable"
+            tools:text="00:00:00"
+            android:textSize="30sp"
             android:layout_weight="1"
             android:textAlignment="center" />
     </LinearLayout>
