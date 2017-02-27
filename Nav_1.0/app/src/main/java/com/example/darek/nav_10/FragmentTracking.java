@@ -52,6 +52,8 @@ public class FragmentTracking extends Fragment {
     TextView textViewTimeBillable;
     TextView textViewTimeNonBillable;
 
+    TextView textViewSummaryDistanceAndTime;
+
     JobManager jobManager;
 
     TrackHandler trackHandler;
@@ -63,6 +65,9 @@ public class FragmentTracking extends Fragment {
 
     private static final int MARKED_ITEM_COLOR = 0xFF33B5E5;
     private static final int ITEMS_COLOR = 0xFF0099CC;
+    private static final int START_COLOR = 0xFF99CC00;
+    private static final int PAUSE_COLOR = 0xFFFFBB33;
+    private static final int STOP_COLOR = 0xFFFF4444;
 
     private final int TRACK_SUMMARY_REQUEST_CODE = 200;
 
@@ -88,6 +93,8 @@ public class FragmentTracking extends Fragment {
         textViewCoordinates = (TextView) view.findViewById(R.id.TextViewGPSCoordinates);
         textViewGpsAccuracy = (TextView) view.findViewById(R.id.TextViewGPSAccuracy);
         textViewDestination = (TextView) view.findViewById(R.id.textViewDestination);
+        textViewSummaryDistanceAndTime = (TextView) view.findViewById(R.id.TextView_TotalDistanceAndTime);
+
 
         final Handler secHandler_5 = new Handler();
         Runnable runnable = new Runnable() {
@@ -133,6 +140,13 @@ public class FragmentTracking extends Fragment {
                         }else{
                             textViewTimeNonBillable.setText(Hours + ":" + Minutes + ":" + Seconds);
                         }
+                        timeCounter = trackHandler.getTotalTimeCounter();
+                        Hours = (timeCounter.Hours <= 9) ? "0" + Integer.toString(timeCounter.Hours) : Integer.toString(timeCounter.Hours);
+                        Minutes = (timeCounter.Minutes <= 9) ? "0" + Integer.toString(timeCounter.Minutes) : Integer.toString(timeCounter.Minutes);
+                        Seconds = (timeCounter.Seconds <= 9) ? "0" + Integer.toString(timeCounter.Seconds) : Integer.toString(timeCounter.Seconds);
+
+                        String Total = Hours + ":" + Minutes + ":" + Seconds + "   " +  trackHandler.getTotalDistance() + "km";
+                        textViewSummaryDistanceAndTime.setText(Total);
                     }
                 });
             }
@@ -154,6 +168,7 @@ public class FragmentTracking extends Fragment {
         });
 
         buttonStart = (Button) view.findViewById(R.id.buttonStart);
+//        buttonStart.setBackgroundColor(START_COLOR);
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,6 +176,7 @@ public class FragmentTracking extends Fragment {
             }
         });
         buttonPause = (Button) view.findViewById(R.id.buttonPause);
+//        buttonPause.setBackgroundColor(PAUSE_COLOR);
         buttonPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,6 +184,7 @@ public class FragmentTracking extends Fragment {
             }
         });
         buttonStop = (Button) view.findViewById(R.id.buttonStop);
+//        buttonStop.setBackgroundColor(STOP_COLOR);
         buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

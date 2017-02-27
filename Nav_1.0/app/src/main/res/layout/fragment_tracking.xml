@@ -21,7 +21,7 @@
         android:layout_alignRight="@+id/buttonPause"
         android:layout_alignEnd="@+id/buttonPause"
         android:textSize="18sp"
-        android:layout_height="70dp" />
+        android:layout_height="50dp" />
 
     <TextView
         android:text="GPS Accuracy\n"
@@ -31,7 +31,8 @@
         android:layout_marginTop="10dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="11dp" />
+        android:layout_marginBottom="11dp"
+        android:visibility="invisible" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -54,7 +55,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_height="70dp" />
+        android:layout_height="50dp" />
 
     <Button
         android:text="Start"
@@ -68,7 +69,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_height="70dp" />
+        android:layout_height="50dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -79,7 +80,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_above="@id/buttonStart"
-        android:layout_marginTop="45dp">
+        android:layout_marginTop="80dp">
         <Button
             android:text="Billabe"
             android:layout_width="fill_parent"
@@ -113,7 +114,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="55dp">
+        android:layout_marginTop="85dp">
 
         <TextView
             android:text="0\nkm"
@@ -142,7 +143,8 @@
         android:orientation="horizontal"
         android:layout_alignTop="@id/KilometersLayout"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="100dp">
+        android:layout_marginTop="100dp"
+        android:id="@+id/linearLayout">
 
         <TextView
             android:text="00:00:00"
@@ -172,10 +174,22 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/textViewDestination"
-        android:layout_alignBottom="@+id/TextViewGPSAccuracy"
         android:layout_toLeftOf="@+id/TextViewGPSAccuracy"
         android:layout_toStartOf="@+id/TextViewGPSAccuracy"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:layout_alignTop="@+id/TextViewGPSAccuracy" />
+
+    <TextView
+        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/TextView_TotalDistanceAndTime"
+        android:layout_alignParentRight="true"
+        android:textSize="18sp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/textViewDestination" />
 
 </RelativeLayout>

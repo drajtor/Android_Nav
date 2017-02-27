@@ -39,6 +39,7 @@ public class TrackHandler {
 
     private TimeCounter TimeCounterBillable = new TimeCounter();
     private TimeCounter TimeCounterNonBillable = new TimeCounter();
+    private TimeCounter TimeCounterTotal = new TimeCounter();
     private TimeCounter ActiveTimeCounter = TimeCounterNonBillable;
 
     private TrackType currentTrackType = TRACK_NON_BILLABLE;
@@ -119,9 +120,19 @@ public class TrackHandler {
     }
 
     public TimeCounter ProcessTimeUpdate(){
-        if (ActiveTrackState.state == START)
+        if (ActiveTrackState.state == START){
             ActiveTimeCounter.OnOneSecondTick();
+            TimeCounterTotal.OnOneSecondTick();
+        }
         return ActiveTimeCounter;
+    }
+
+    public TimeCounter getTotalTimeCounter (){
+        return TimeCounterTotal;
+    }
+
+    public float getTotalDistance (){
+        return distanceCounterBillable.getDistance() + distanceCounterNonBillable.getDistance();
     }
 
     public float getDistance (TrackType trackType){
