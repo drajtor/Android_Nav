@@ -15,13 +15,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.Serializable;
-import java.sql.Time;
-import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -55,14 +48,15 @@ public class FragmentTracking extends Fragment {
 
     TextView textViewSummaryDistanceAndTime;
 
-    ColorPainter colorPainter = new ColorPainter();
+    ColorPainter colorPainter;
 
     JobManager jobManager;
 
     TrackHandler trackHandler;
     TrackHandler trackHandlerBackup;
 
-    onJobListUpdatedListener mCallback;
+    onJobListUpdatedListener onJobListUpdatedListenerCallback;
+    onJobStateChangedListener onJobStateChangedListenerCallback;
 
     Timer TimerSecond;
 
@@ -99,7 +93,8 @@ public class FragmentTracking extends Fragment {
         textViewDestination = (TextView) view.findViewById(R.id.textViewDestination);
         textViewSummaryDistanceAndTime = (TextView) view.findViewById(R.id.TextView_TotalDistanceAndTime);
 
-//        view.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_Background);
+        NavApplication navApplication = (NavApplication)context.getApplicationContext();
+        colorPainter = navApplication.getColorPainter();
 
         final Handler secHandler_5 = new Handler();
         Runnable runnable = new Runnable() {
@@ -173,7 +168,6 @@ public class FragmentTracking extends Fragment {
         });
 
         buttonStart = (Button) view.findViewById(R.id.buttonStart);
-//        buttonStart.setBackgroundColor(START_COLOR);
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,7 +175,6 @@ public class FragmentTracking extends Fragment {
             }
         });
         buttonPause = (Button) view.findViewById(R.id.buttonPause);
-//        buttonPause.setBackgroundColor(PAUSE_COLOR);
         buttonPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,7 +182,6 @@ public class FragmentTracking extends Fragment {
             }
         });
         buttonStop = (Button) view.findViewById(R.id.buttonStop);
-//        buttonStop.setBackgroundColor(STOP_COLOR);
         buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -226,7 +218,7 @@ public class FragmentTracking extends Fragment {
         });
 
         TrackTypeButtonClicked(trackHandler.getCurrentTrackType());
-        UpdateColors(activeTrackButton);
+        UpdateColors();
 
         return view;
     }
@@ -239,8 +231,8 @@ public class FragmentTracking extends Fragment {
                 case RESULT_OK:
                     Toast.makeText(context,"Raport sent",Toast.LENGTH_SHORT).show();
                     jobManager.remove(jobManager.getActiveJob());
-                    mCallback = (onJobListUpdatedListener) context;
-                    mCallback.onJobListUpdated();
+                    onJobListUpdatedListenerCallback = (onJobListUpdatedListener) context;
+                    onJobListUpdatedListenerCallback.onJobListUpdated();
                     break;
                 case RESULT_CANCELED:
                     Toast.makeText(context,"Cancelled",Toast.LENGTH_SHORT).show();
@@ -255,31 +247,16 @@ public class FragmentTracking extends Fragment {
         }
     }
 
-    private void ChangeStateButtonColor(TrackHandler.State state){
-        switch (state){
-            case START:
-                ChangeActiveStateButtonColor(buttonStart);
-                break;
-            case STOP:
-                ChangeActiveStateButtonColor(buttonStop);
-                break;
-            case PAUSE:
-                ChangeActiveStateButtonColor(buttonPause);
-                break;
-        }
-    }
-
     private void TrackTypeButtonClicked(TrackHandler.TrackType trackType){
         switch (trackType){
             case TRACK_BILLABLE:
-                ChangeTrackButtonColorOnClick(buttonBillable);
+                activeTrackButton = buttonBillable;
                 break;
             case TRACK_NON_BILLABLE:
             default:
-                ChangeTrackButtonColorOnClick(buttonNonBillable);
+                activeTrackButton = buttonNonBillable;
                 break;
         }
-//        ChangeStateButtonColor(trackHandler.getTrackState(trackType));
         if (AutoSwitchStateOnTrackChange == true){
             if (activeStartStopButton == buttonStart){
                 StateButtonClicked(TrackHandler.State.START);
@@ -289,12 +266,13 @@ public class FragmentTracking extends Fragment {
                 StateButtonClicked(TrackHandler.State.STOP);
             }
         }
-        ChangeStateButtonColor(trackHandler.getTrackState(trackType));
+        ChangeStateButton(trackHandler.getTrackState(trackType));
+        UpdateColors();
     }
 
     private void StateButtonClicked(TrackHandler.State state){
         if (jobManager.getActiveJob() != null){
-            ChangeStateButtonColor(state);
+            ChangeStateButton(state);
             if (activeTrackButton == buttonBillable){
                 trackHandler.setCurrentTrackType (TRACK_BILLABLE);
             }else if(activeTrackButton == buttonNonBillable){
@@ -302,27 +280,26 @@ public class FragmentTracking extends Fragment {
             }
             trackHandler.setActiveTrackState(state);
             trackHandler.TracksStateHandler();
+            UpdateColors();
         }else{
             Toast.makeText(context,"No Track Scheduled",Toast.LENGTH_SHORT).show();
         }
+        onJobStateChangedListenerCallback = (MainActivity)context;
+        onJobStateChangedListenerCallback.onJobStateChanged();
     }
 
-    private void ChangeActiveStateButtonColor(Button button){
-//        if (activeStartStopButton != null){
-//            activeStartStopButton.setBackgroundColor(ITEMS_COLOR);
-//        }
-//        button.setBackgroundColor(MARKED_ITEM_COLOR);
-        activeStartStopButton = button;
-
-        if (activeTrackButton == buttonBillable){
-            UpdateColors(buttonNonBillable);
-        }else if(activeTrackButton == buttonNonBillable){
-            UpdateColors(buttonBillable);
+    private void ChangeStateButton(TrackHandler.State state){
+        switch (state){
+            case START:
+                activeStartStopButton = buttonStart;
+                break;
+            case PAUSE:
+                activeStartStopButton = buttonPause;
+                break;
+            case STOP:
+                activeStartStopButton = buttonStop;
+                break;
         }
-    }
-    private void ChangeTrackButtonColorOnClick(Button button){
-        UpdateColors(button);
-        activeTrackButton = button;
     }
 
     public void onTrackChosen() {
@@ -331,50 +308,18 @@ public class FragmentTracking extends Fragment {
             textViewDestination.setText(job.getJobName());
     }
 
-    private void UpdateColors (Button trackButton) {
-        if (activeStartStopButton != null){
-            if (activeStartStopButton == buttonStart){
-                buttonStart.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_StartButtonPushed);
-                buttonPause.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_PauseButton);
-                buttonStop.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_StopButton);
-                this.view.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_StartButton);
-                View kakaview = ((MainActivity)this.context).findViewById(R.id.activity_main);
-                kakaview.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_StartButton);
-            }else if(activeStartStopButton == buttonPause){
-                buttonStart.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_StartButton);
-                buttonPause.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_PauseButtonPushed);
-                buttonStop.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_StopButton);
-                this.view.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_PauseButton);
-                View kakaview = ((MainActivity)this.context).findViewById(R.id.activity_main);
-                kakaview.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_PauseButton);
-            }else if (activeStartStopButton == buttonStop){
-                buttonStart.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_StartButton);
-                buttonPause.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_PauseButton);
-                buttonStop.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_StopButtonPushed);
-                this.view.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_StopButton);
-                View kakaview = ((MainActivity)this.context).findViewById(R.id.activity_main);
-                kakaview.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_StopButton);
-            }
-        }else{
-            buttonStart.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_StartButton);
-            buttonPause.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_PauseButton);
-            buttonStop.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_StopButton);
-        }
-        if (activeTrackButton != null){
-            if (activeStartStopButton == buttonStart){
-                activeTrackButton.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_StartButtonPushed);
-            }else if(activeStartStopButton == buttonPause){
-                activeTrackButton.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_PauseButtonPushed);
-            }else if (activeStartStopButton == buttonStop){
-                activeTrackButton.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_StopButtonPushed);
-            }
-        }
-        if (activeStartStopButton == buttonStart){
-            trackButton.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_StartButton);
-        }else if(activeStartStopButton == buttonPause){
-            trackButton.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_PauseButton);
-        }else if (activeStartStopButton == buttonStop){
-            trackButton.setBackgroundColor(colorPainter.getFragmentTrackingColors().Color_StopButton);
-        }
+    private void UpdateColors () {
+        TrackHandler.TrackType trackType = trackHandler.getCurrentTrackType();
+        TrackHandler.State state = trackHandler.getTrackState(trackType);
+
+        buttonStart.setBackgroundColor(colorPainter.UpdateButtonColor(state,trackType, ColorPainter.ButtonType.START_BUTTON));
+        buttonPause.setBackgroundColor(colorPainter.UpdateButtonColor(state,trackType, ColorPainter.ButtonType.PAUSE_BUTTON));
+        buttonStop.setBackgroundColor(colorPainter.UpdateButtonColor(state,trackType, ColorPainter.ButtonType.STOP_BUTTON));
+        buttonBillable.setBackgroundColor(colorPainter.UpdateButtonColor(state,trackType, ColorPainter.ButtonType.TRACK_BILLABLE_BUTTON));
+        buttonNonBillable.setBackgroundColor(colorPainter.UpdateButtonColor(state,trackType, ColorPainter.ButtonType.TRACK_NON_BILLABLE_BUTTON));
+
+        this.view.setBackgroundColor(colorPainter.UpdateBackgroundColor(state));
+        View kakaview = ((MainActivity)this.context).findViewById(R.id.activity_main);
+        kakaview.setBackgroundColor(colorPainter.UpdateBackgroundColor(state));
     }
 }

@@ -25,6 +25,8 @@ public class FragmentJobList extends Fragment  {
 
     Context context;
 
+    ColorPainter colorPainter;
+
     private ListView listView;
     private JobListAdapter jobListAdapter;
     private ListElementViewHolder currentJob = null;
@@ -33,7 +35,7 @@ public class FragmentJobList extends Fragment  {
     private final int MARKED_ITEM_COLOR = 0xFF33B5E5;
     private final int ITEMS_COLOR = 0xFF0099CC;
 
-    onJobSelectedListener mCallback;
+    onJobSelectedListener onJobSelectedListenerCallback;
 
     public FragmentJobList(Context context){
         this.context = context;
@@ -67,10 +69,13 @@ public class FragmentJobList extends Fragment  {
         });
 
         try {
-            mCallback = ((onJobSelectedListener)context);
+            onJobSelectedListenerCallback = ((onJobSelectedListener)context);
         }catch (ClassCastException e){
-            throw new ClassCastException ("context to onJobSelectedListener interface cast failed");
+            throw new ClassCastException ("context to onJobSelectedListenerCallback interface cast failed");
         }
+
+        NavApplication navApplication = (NavApplication)context.getApplicationContext();
+        colorPainter = navApplication.getColorPainter();
 
         return view;
     }
@@ -99,6 +104,8 @@ public class FragmentJobList extends Fragment  {
                         ItemClicked(listElementViewHolder);
                     }
                 });
+                int color = colorPainter.getBackgroundColorByState();
+                setListElementColor(listElementViewHolder,color);
                 convertView.setTag(listElementViewHolder);
             }else{
 //                ListElementViewHolder viewHolder = (ListElementViewHolder)convertView.getTag();
@@ -125,13 +132,14 @@ public class FragmentJobList extends Fragment  {
 
     private void ItemClicked (ListElementViewHolder listElementViewHolder){
         jobManager.setActiveJob(listElementViewHolder.job);
+
         if (null != currentJob){
-            setListElementColor(currentJob,ITEMS_COLOR);
+            setListElementColor(currentJob,colorPainter.getBackgroundColorByState());
         }
         currentJob = listElementViewHolder;
-        setListElementColor(currentJob,MARKED_ITEM_COLOR);
+        setListElementColor(currentJob,colorPainter.getButtonPushedColorByState());
 
-        mCallback.onJobSelected();
+        onJobSelectedListenerCallback.onJobSelected();
     }
 
     private void setListElementColor (ListElementViewHolder listElementViewHolder  ,int color){
@@ -143,5 +151,15 @@ public class FragmentJobList extends Fragment  {
     public void onJobListUpdate() {
         jobListAdapter = new JobListAdapter(listView.getContext(),R.layout.job_list_item, jobManager);
         listView.setAdapter(jobListAdapter);
+    }
+
+    public void onJobStateChanged () {
+        for (int i=0; i<jobListAdapter.getCount() ;i++ ) {
+            ListElementViewHolder listElementViewHolder = (ListElementViewHolder)listView.getChildAt(i).getTag();
+            setListElementColor(listElementViewHolder,colorPainter.getBackgroundColorByState());
+        }
+        if (null != currentJob){
+            setListElementColor(currentJob,colorPainter.getButtonPushedColorByState());
+        }
     }
 }

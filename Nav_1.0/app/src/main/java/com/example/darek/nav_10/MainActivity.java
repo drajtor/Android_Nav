@@ -13,7 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity implements FragmentJobList.onJobSelectedListener, onJobListUpdatedListener {
+public class MainActivity extends AppCompatActivity implements FragmentJobList.onJobSelectedListener, onJobListUpdatedListener, onJobStateChangedListener {
 
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -85,6 +85,11 @@ public class MainActivity extends AppCompatActivity implements FragmentJobList.o
     @Override
     public void onJobListUpdated() {
         fragmentJobList.onJobListUpdate();
+    }
+
+    @Override
+    public void onJobStateChanged() {
+        fragmentJobList.onJobStateChanged();
     }
 
     private class CustomAdapter extends FragmentPagerAdapter {
