@@ -104,7 +104,7 @@ public class FragmentJobList extends Fragment  {
                         ItemClicked(listElementViewHolder);
                     }
                 });
-                int color = colorPainter.getBackgroundColorByState();
+                int color = colorPainter.getBackgroundColor();
                 setListElementColor(listElementViewHolder,color);
                 convertView.setTag(listElementViewHolder);
             }else{
@@ -134,10 +134,10 @@ public class FragmentJobList extends Fragment  {
         jobManager.setActiveJob(listElementViewHolder.job);
 
         if (null != currentJob){
-            setListElementColor(currentJob,colorPainter.getBackgroundColorByState());
+            setListElementColor(currentJob,colorPainter.getButtonColor());
         }
         currentJob = listElementViewHolder;
-        setListElementColor(currentJob,colorPainter.getButtonPushedColorByState());
+        setListElementColor(currentJob,colorPainter.getButtonPushedColor());
 
         onJobSelectedListenerCallback.onJobSelected();
     }
@@ -156,10 +156,10 @@ public class FragmentJobList extends Fragment  {
     public void onJobStateChanged () {
         for (int i=0; i<jobListAdapter.getCount() ;i++ ) {
             ListElementViewHolder listElementViewHolder = (ListElementViewHolder)listView.getChildAt(i).getTag();
-            setListElementColor(listElementViewHolder,colorPainter.getBackgroundColorByState());
+            setListElementColor(listElementViewHolder,colorPainter.getButtonColor());
         }
         if (null != currentJob){
-            setListElementColor(currentJob,colorPainter.getButtonPushedColorByState());
+            setListElementColor(currentJob,colorPainter.getButtonPushedColor());
         }
     }
 }

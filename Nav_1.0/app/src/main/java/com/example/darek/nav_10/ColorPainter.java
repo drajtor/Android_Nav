@@ -8,11 +8,12 @@ public class ColorPainter {
 
     enum ButtonType {START_BUTTON, PAUSE_BUTTON, STOP_BUTTON, TRACK_BILLABLE_BUTTON, TRACK_NON_BILLABLE_BUTTON};
 
-    private int BackgroundColorByState = RED;
-    private int ButtonPushedColorByState = RED;
+    private int BackgroundColor = BLUE;
+    private int ButtonColor = BackgroundColor;
+    private int ButtonPushedColor = BLUE_LIGHT;
 
-    private static final int BLUE_MARKED_ITEM_COLOR = 0xFF33B5E5;
-    private static final int BLUE_ITEMS_COLOR = 0xFF0099CC;
+    private static final int BLUE_LIGHT = 0xFF33B5E5;
+    private static final int BLUE = 0xFF0099CC;
 
     private static final int GREEN = 0xFF99CC00;
     private static final int ORANGE = 0xFFFFAA33;
@@ -26,13 +27,13 @@ public class ColorPainter {
     private FragmentTrackingColorsStructure fragmentTrackingColorsStructure = new FragmentTrackingColorsStructure();
 
     public ColorPainter(){
-        setTheme (Theme.BLUE);
+        setTheme (Theme.COLOR_ACTIVE);
         setMode (Mode.WOLAN_MODE);
         UpdateColors();
     }
 
     enum Mode {ONE_COLOR, ACTIVE_COLOR, WOLAN_MODE};
-    enum Theme {BLUE, RED, GREEN/*, COLOR_ACTIVE*/};
+    enum Theme {BLUE, RED, GREEN, COLOR_ACTIVE};
     Theme theme;
     Mode mode;
 
@@ -54,14 +55,18 @@ public class ColorPainter {
     private void setFragmentTrackingColorsStructure (){
         switch (theme){
             case BLUE:
-                fragmentTrackingColorsStructure.Color_StartButton = BLUE_ITEMS_COLOR;
-                fragmentTrackingColorsStructure.Color_PauseButton = BLUE_ITEMS_COLOR;
-                fragmentTrackingColorsStructure.Color_StopButton = BLUE_ITEMS_COLOR;
+                fragmentTrackingColorsStructure.Color_StartButton = BLUE;
+                fragmentTrackingColorsStructure.Color_PauseButton = BLUE;
+                fragmentTrackingColorsStructure.Color_StopButton = BLUE;
 
-                fragmentTrackingColorsStructure.Color_StartButtonPushed = BLUE_MARKED_ITEM_COLOR;
-                fragmentTrackingColorsStructure.Color_PauseButtonPushed = BLUE_MARKED_ITEM_COLOR;
-                fragmentTrackingColorsStructure.Color_StopButtonPushed = BLUE_MARKED_ITEM_COLOR;
-                fragmentTrackingColorsStructure.Color_Background = BLUE_ITEMS_COLOR;
+                fragmentTrackingColorsStructure.Color_StartButtonPushed = BLUE_LIGHT;
+                fragmentTrackingColorsStructure.Color_PauseButtonPushed = BLUE_LIGHT;
+                fragmentTrackingColorsStructure.Color_StopButtonPushed = BLUE_LIGHT;
+                fragmentTrackingColorsStructure.Color_Background = BLUE;
+
+                BackgroundColor = BLUE;
+                ButtonColor = BackgroundColor;
+                ButtonPushedColor = BLUE_LIGHT;
                 break;
 
             case RED:
@@ -73,6 +78,10 @@ public class ColorPainter {
                 fragmentTrackingColorsStructure.Color_PauseButtonPushed = RED;
                 fragmentTrackingColorsStructure.Color_StopButtonPushed = RED;
                 fragmentTrackingColorsStructure.Color_Background = RED_DARK;
+
+                BackgroundColor = RED_DARK;
+                ButtonColor = BackgroundColor;
+                ButtonPushedColor = RED;
                 break;
 
             case GREEN:
@@ -84,28 +93,19 @@ public class ColorPainter {
                 fragmentTrackingColorsStructure.Color_PauseButtonPushed = GREEN;
                 fragmentTrackingColorsStructure.Color_StopButtonPushed = GREEN;
                 fragmentTrackingColorsStructure.Color_Background = GREEN_DARK;
+
+                BackgroundColor = GREEN_DARK;
+                ButtonColor = BackgroundColor;
+                ButtonPushedColor = GREEN;
                 break;
+            case COLOR_ACTIVE:
+                fragmentTrackingColorsStructure.Color_StartButton = GREEN_DARK;
+                fragmentTrackingColorsStructure.Color_PauseButton = ORANGE_DARK;
+                fragmentTrackingColorsStructure.Color_StopButton = RED_DARK;
 
-//            case COLOR_ACTIVE:
-//                fragmentTrackingColorsStructure.Color_StartButton = GREEN_DARK;
-//                fragmentTrackingColorsStructure.Color_PauseButton = BLUE_ITEMS_COLOR;
-//                fragmentTrackingColorsStructure.Color_StopButton = RED_DARK;
-//
-//                fragmentTrackingColorsStructure.Color_StartButtonPushed = GREEN;
-//                fragmentTrackingColorsStructure.Color_PauseButtonPushed = BLUE_MARKED_ITEM_COLOR;
-//                fragmentTrackingColorsStructure.Color_StopButtonPushed = RED_DARK;
-//                fragmentTrackingColorsStructure.Color_Background = GREY_DARK;
-//                break;
-        }
-        if (mode == Mode.WOLAN_MODE){
-            fragmentTrackingColorsStructure.Color_StartButton = GREEN_DARK;
-            fragmentTrackingColorsStructure.Color_PauseButton = ORANGE_DARK;
-            fragmentTrackingColorsStructure.Color_StopButton = RED_DARK;
-
-            fragmentTrackingColorsStructure.Color_StartButtonPushed = GREEN;
-            fragmentTrackingColorsStructure.Color_PauseButtonPushed = ORANGE;
-            fragmentTrackingColorsStructure.Color_StopButtonPushed = RED_DARK;
-            fragmentTrackingColorsStructure.Color_Background = BLUE_ITEMS_COLOR;
+                fragmentTrackingColorsStructure.Color_StartButtonPushed = GREEN;
+                fragmentTrackingColorsStructure.Color_PauseButtonPushed = ORANGE;
+                fragmentTrackingColorsStructure.Color_StopButtonPushed = RED_DARK;
         }
     }
 
@@ -125,43 +125,42 @@ public class ColorPainter {
         int Color_Background;
     }
 
-    public int UpdateBackgroundColor (TrackHandler.State state){
+    public int getBackgroundColorByState(TrackHandler.State state){
         if (mode == Mode.WOLAN_MODE){
-            BackgroundColorByState = fragmentTrackingColorsStructure.Color_Background;
-            ButtonPushedColorByState = BLUE_MARKED_ITEM_COLOR;//TODO
+            BackgroundColor = fragmentTrackingColorsStructure.Color_Background;
+//            ButtonPushedColor = BLUE_LIGHT;//TODO
             return fragmentTrackingColorsStructure.Color_Background;
         }
         switch (state) {
             case START:
-                BackgroundColorByState = fragmentTrackingColorsStructure.Color_StartButton;
-                ButtonPushedColorByState = fragmentTrackingColorsStructure.Color_StartButtonPushed;
-                return BackgroundColorByState;
+                BackgroundColor = fragmentTrackingColorsStructure.Color_StartButton;
+                ButtonPushedColor = fragmentTrackingColorsStructure.Color_StartButtonPushed;
+                ButtonColor = fragmentTrackingColorsStructure.Color_StartButton;
+                return BackgroundColor;
             case PAUSE:
-                BackgroundColorByState = fragmentTrackingColorsStructure.Color_PauseButton;
-                ButtonPushedColorByState = fragmentTrackingColorsStructure.Color_PauseButtonPushed;
-                return BackgroundColorByState;
+                BackgroundColor = fragmentTrackingColorsStructure.Color_PauseButton;
+                ButtonPushedColor = fragmentTrackingColorsStructure.Color_PauseButtonPushed;
+                ButtonColor = fragmentTrackingColorsStructure.Color_PauseButton;
+                return BackgroundColor;
             case STOP:
-                BackgroundColorByState = fragmentTrackingColorsStructure.Color_StopButton;
-                ButtonPushedColorByState = fragmentTrackingColorsStructure.Color_StopButtonPushed;
-                return BackgroundColorByState;
+                BackgroundColor = fragmentTrackingColorsStructure.Color_StopButton;
+                ButtonPushedColor = fragmentTrackingColorsStructure.Color_StopButtonPushed;
+                ButtonColor = fragmentTrackingColorsStructure.Color_StopButton;
+                return BackgroundColor;
         }
         return 0;
     }
 
-    public int getBackgroundColorByState (){
-        if (mode == Mode.WOLAN_MODE){
-            return fragmentTrackingColorsStructure.Color_Background;
-        }else{
-            return BackgroundColorByState;
-        }
+    public int getBackgroundColor() {
+        return BackgroundColor;
     }
 
-    public int getButtonPushedColorByState(){
-        if (mode == Mode.WOLAN_MODE){
-            return BLUE_MARKED_ITEM_COLOR;
-        }else{
-            return ButtonPushedColorByState;
-        }
+    public int getButtonPushedColor(){
+            return ButtonPushedColor;
+    }
+
+    public int getButtonColor(){
+        return ButtonColor;
     }
 
     public int UpdateButtonColor (TrackHandler.State state, TrackHandler.TrackType trackType, ButtonType buttonType){
@@ -236,7 +235,7 @@ public class ColorPainter {
             }
         }else{
             ButtonColor = fragmentTrackingColorsStructure.Color_Background;
-            ButtonColorPushed = BLUE_MARKED_ITEM_COLOR; //TODO
+            ButtonColorPushed = ButtonPushedColor;
         }
 
         switch (buttonType){

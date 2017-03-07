@@ -20,6 +20,7 @@ import java.util.TimerTask;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static android.graphics.Color.RED;
 import static com.example.darek.nav_10.TrackHandler.TrackType.TRACK_BILLABLE;
 import static com.example.darek.nav_10.TrackHandler.TrackType.TRACK_NON_BILLABLE;
 
@@ -61,9 +62,6 @@ public class FragmentTracking extends Fragment {
     Timer TimerSecond;
 
     boolean AutoSwitchStateOnTrackChange = true;
-
-    private static final int MARKED_ITEM_COLOR = 0xFF33B5E5;
-    private static final int ITEMS_COLOR = 0xFF0099CC;
 
     private final int TRACK_SUMMARY_REQUEST_CODE = 200;
 
@@ -318,8 +316,19 @@ public class FragmentTracking extends Fragment {
         buttonBillable.setBackgroundColor(colorPainter.UpdateButtonColor(state,trackType, ColorPainter.ButtonType.TRACK_BILLABLE_BUTTON));
         buttonNonBillable.setBackgroundColor(colorPainter.UpdateButtonColor(state,trackType, ColorPainter.ButtonType.TRACK_NON_BILLABLE_BUTTON));
 
-        this.view.setBackgroundColor(colorPainter.UpdateBackgroundColor(state));
-        View kakaview = ((MainActivity)this.context).findViewById(R.id.activity_main);
-        kakaview.setBackgroundColor(colorPainter.UpdateBackgroundColor(state));
+        int fragmentTrackingBackgroundColor;
+        int activityBackgroundColor;
+
+        if (colorPainter.getMode() == ColorPainter.Mode.WOLAN_MODE){
+            fragmentTrackingBackgroundColor = colorPainter.getBackgroundColor();
+            activityBackgroundColor = fragmentTrackingBackgroundColor;
+        }else {
+            fragmentTrackingBackgroundColor = colorPainter.getBackgroundColorByState(state);
+            activityBackgroundColor = fragmentTrackingBackgroundColor;
+        }
+
+        this.view.setBackgroundColor(fragmentTrackingBackgroundColor);
+        View activityView = ((MainActivity)this.context).findViewById(R.id.activity_main);
+        activityView.setBackgroundColor(activityBackgroundColor);
     }
 }
