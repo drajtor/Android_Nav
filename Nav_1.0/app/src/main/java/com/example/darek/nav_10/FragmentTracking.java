@@ -20,7 +20,6 @@ import java.util.TimerTask;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
-import static android.graphics.Color.RED;
 import static com.example.darek.nav_10.TrackHandler.TrackType.TRACK_BILLABLE;
 import static com.example.darek.nav_10.TrackHandler.TrackType.TRACK_NON_BILLABLE;
 
@@ -49,7 +48,7 @@ public class FragmentTracking extends Fragment {
 
     TextView textViewSummaryDistanceAndTime;
 
-    ColorPainter colorPainter;
+    ColorPainterForTracking colorPainter;
 
     JobManager jobManager;
 
@@ -92,7 +91,7 @@ public class FragmentTracking extends Fragment {
         textViewSummaryDistanceAndTime = (TextView) view.findViewById(R.id.TextView_TotalDistanceAndTime);
 
         NavApplication navApplication = (NavApplication)context.getApplicationContext();
-        colorPainter = navApplication.getColorPainter();
+        colorPainter = navApplication.getColorPainterForTracking();
 
         final Handler secHandler_5 = new Handler();
         Runnable runnable = new Runnable() {
@@ -319,13 +318,8 @@ public class FragmentTracking extends Fragment {
         int fragmentTrackingBackgroundColor;
         int activityBackgroundColor;
 
-        if (colorPainter.getMode() == ColorPainter.Mode.WOLAN_MODE){
-            fragmentTrackingBackgroundColor = colorPainter.getBackgroundColor();
-            activityBackgroundColor = fragmentTrackingBackgroundColor;
-        }else {
-            fragmentTrackingBackgroundColor = colorPainter.getBackgroundColorByState(state);
-            activityBackgroundColor = fragmentTrackingBackgroundColor;
-        }
+        fragmentTrackingBackgroundColor = colorPainter.getBackgroundColor();
+        activityBackgroundColor = fragmentTrackingBackgroundColor;
 
         this.view.setBackgroundColor(fragmentTrackingBackgroundColor);
         View activityView = ((MainActivity)this.context).findViewById(R.id.activity_main);

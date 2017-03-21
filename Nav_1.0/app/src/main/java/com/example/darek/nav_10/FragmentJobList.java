@@ -75,7 +75,7 @@ public class FragmentJobList extends Fragment  {
         }
 
         NavApplication navApplication = (NavApplication)context.getApplicationContext();
-        colorPainter = navApplication.getColorPainter();
+        colorPainter = navApplication.getColorPainterForTracking();
 
         return view;
     }

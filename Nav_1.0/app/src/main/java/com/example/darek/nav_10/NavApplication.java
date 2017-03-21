@@ -8,12 +8,12 @@ import android.app.Application;
 
 public class NavApplication extends Application{
 
-    ColorPainter colorPainter = new ColorPainter();
+    ColorPainterForTracking colorPainterForTracking = new ColorPainterForTracking();
 
-    public ColorPainter getColorPainter (){
-        return colorPainter;
+    public ColorPainterForTracking getColorPainterForTracking(){
+        return colorPainterForTracking;
     }
     public void setColorPainterTheme(ColorPainter.Theme theme){
-        colorPainter.setTheme(theme);
+        colorPainterForTracking.setTheme(theme);
     }
 }
