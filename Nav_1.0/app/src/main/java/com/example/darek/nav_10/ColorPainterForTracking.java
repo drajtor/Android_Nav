@@ -6,7 +6,7 @@ package com.example.darek.nav_10;
 
 public class ColorPainterForTracking extends ColorPainter {
 
-    enum Mode {ONE_COLOR, ACTIVE_COLOR, WOLAN_MODE};
+    enum Mode {ONE_COLOR, WOLAN_MODE};
 
     protected static Mode mode;
     private FragmentTrackingColorsStructure fragmentTrackingColorsStructure = new FragmentTrackingColorsStructure();
@@ -14,7 +14,7 @@ public class ColorPainterForTracking extends ColorPainter {
 
     public ColorPainterForTracking (){
         super();
-        setMode(Mode.WOLAN_MODE);
+        setMode(Mode.ONE_COLOR);
         setFragmentTrackingColorsStructure();
     }
 
@@ -38,7 +38,6 @@ public class ColorPainterForTracking extends ColorPainter {
                 fragmentTrackingColorsStructure.Color_StopButtonPushed = super.ButtonPushedColor;
                 fragmentTrackingColorsStructure.Color_Background = super.BackgroundColor;
                 break;
-            case ACTIVE_COLOR:
             case WOLAN_MODE:
                 fragmentTrackingColorsStructure.Color_StartButton = GREEN_DARK;
                 fragmentTrackingColorsStructure.Color_PauseButton = ORANGE_DARK;
@@ -130,25 +129,8 @@ public class ColorPainterForTracking extends ColorPainter {
         int ButtonColor = 0;
         int ButtonColorPushed = 0;
 
-//        if (mode == Mode.WOLAN_MODE){
             ButtonColor = fragmentTrackingColorsStructure.Color_Background;
             ButtonColorPushed = super.ButtonPushedColor;
-//        }else{
-//            switch (state){
-//                case START:
-//                    ButtonColor = fragmentTrackingColorsStructure.Color_StartButton;
-//                    ButtonColorPushed = fragmentTrackingColorsStructure.Color_StartButtonPushed;
-//                    break;
-//                case PAUSE:
-//                    ButtonColor = fragmentTrackingColorsStructure.Color_PauseButton;
-//                    ButtonColorPushed = fragmentTrackingColorsStructure.Color_PauseButtonPushed;
-//                    break;
-//                case STOP:
-//                    ButtonColor = fragmentTrackingColorsStructure.Color_StopButton;
-//                    ButtonColorPushed = fragmentTrackingColorsStructure.Color_StopButtonPushed;
-//                    break;
-//            }
-//        }
 
         switch (buttonType){
             case TRACK_BILLABLE_BUTTON:

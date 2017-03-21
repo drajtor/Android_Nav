@@ -28,7 +28,7 @@ public class ColorPainter {
     protected static Theme theme;
 
     public ColorPainter(){
-        setTheme (Theme.BLUE);
+        setTheme (Theme.GREEN);
 
         switch (theme){
             case BLUE:
