@@ -24,8 +24,24 @@ public class JobManager extends ArrayList<Job>{
     }
 
     private void updateJobList (){
-        add(new TrackJob("Katowice", "Jordana", "1"));
-        add(new TrackJob("Warszawa","Krakowska","110"));
-        add(new TrackJob("Gliwice","Zwycięstwa","2"));
+        Job newJob;
+
+        newJob = new TrackJob("Katowice", "Jordana", "1");
+        newJob.setJobID(1);
+        newJob.setJobPrincipal("Some hospital");
+        newJob.setJobType(534);
+        add(newJob);
+
+        newJob = new TrackJob("Warszawa","Krakowska","110");
+        newJob.setJobID(2);
+        newJob.setJobPrincipal("Some hospital");
+        newJob.setJobType(534);
+        add(newJob);
+
+        newJob = new TrackJob("Gliwice","Zwycięstwa","2");
+        newJob.setJobID(3);
+        newJob.setJobPrincipal("Some hospital");
+        newJob.setJobType(534);
+        add(newJob);
     }
 }

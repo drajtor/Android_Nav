@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -16,7 +17,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class TrackSummaryActivity extends AppCompatActivity {
 
@@ -35,21 +39,21 @@ public class TrackSummaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_summary);
 
-        raportList.add(new ListElement("ID",""));
-        raportList.add(new ListElement("JobType",""));
-        raportList.add(new ListElement("Principal",""));
-        raportList.add(new ListElement("Name",""));
-        raportList.add(new ListElement("Start",""));
-        raportList.add(new ListElement("Finish",""));
-        raportList.add(new ListElement("Distance",""));
-        raportList.add(new ListElement("Time",""));
-
-
         Intent intent= getIntent();
         intent.getSerializableExtra("trackJob");
 
         TrackJob trackJob =  (TrackJob)(intent.getSerializableExtra("trackJob"));
-        trackRaport = new TrackRaport(trackJob);
+        trackRaport = new TrackRaport();
+
+        raportList.add(new ListElement("ID",Integer.toString( trackJob.getJobID() ) ) );
+        raportList.add(new ListElement("JobType",Integer.toString( trackJob.getJobType() ) ));
+        raportList.add(new ListElement("Principal",trackJob.getJobPrincipal()));
+        raportList.add(new ListElement("Name",trackJob.getJobName()));
+        raportList.add(new ListElement("Start",""));
+        raportList.add(new ListElement("Finish",""));
+        raportList.add(new ListElement("Distance",Float.toString(trackJob.getDistanceBillable())));
+        raportList.add(new ListElement("Time",Integer.toString(trackJob.getTimeBillable())));
+
 
         listView = (ListView) findViewById(R.id.ListView_JobRaportList);
         listAdapter = new ListAdapter(getApplicationContext(),R.layout.job_raport_list_item,raportList);
